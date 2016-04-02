@@ -1,0 +1,137 @@
+body {
+	background-color: #222222;
+	color: white;
+	margin: 0;
+	overflow: hidden;
+}
+.sidebar {
+	width: 25%;
+	float: left;
+	margin: 8px;
+}
+.midbar {
+	width: 50%;
+	float: left;
+	background-color: lightblue;
+	color: black;
+	border-left: 3px #999999 solid;
+	border-right: 3px #999999 solid;
+	bottom: 0px;
+}
+.rightbar {
+	float: left;
+}
+#money-bar {
+	width: 100%;
+	text-align: center;
+	font-size: 30px;
+	margin-top: 20%;
+}
+#mps-bar, #mpc-bar {
+	width: 100%;
+	text-align: center;
+	font-size: 12px;
+}
+#clicker {
+	width: 40%;
+	margin-left: 30%;
+	margin-right: 30%;
+}
+#special {
+	position: absolute;
+	bottom: 0;
+}
+.building, .upgrade, .achievement {
+	display: inline-block;
+	border : 3px #999 solid;
+	position: relative;
+	margin: 2px;
+	top: 0;
+	left: 0;
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.hover {
+	display: none;
+	font-size: 12px;
+	background-color: black;
+	color: white;
+}
+.building {
+	clear: left;
+	max-width: 275px;
+	min-width: 50%;
+}
+.build-name {
+	font-size: 24px;
+	display: inline-block;
+	padding-left: 4px;
+}
+.build-num {
+	font-size: 22px;
+	padding-right: 4px;
+	text-align: right;
+	display: inline-block;
+	float: right;
+}
+.build-cost-bar {
+	width: 100%;
+	font-size: 10px;
+	display: inline-block;
+}
+.build-cost {
+	text-align: right;
+	float: right;
+}
+.build-cost-unit {
+	padding: 0px 4px;
+	float: right;
+}
+.upgrade {
+	padding: 4px;
+}
+.achievement {
+	padding: 4px;
+}
+div:hover > .hover {
+	display: block;
+	position: absolute;
+	top: -2px;
+	left: 100%;
+	background-color: black;
+	border: 3px #999999 solid;
+	padding: 5px;
+	min-width: 200px;
+	max-width: 300px;
+	z-index: 2;
+}
+.build-mps {
+	font-weight: bold;
+}
+.space-words{
+	padding-top: 10px; /* WHY THE FUCK DOESN'T THIS WORK */
+}
+.flavor{
+	clear: left;
+	font-style: italic;
+	color: #bbb;
+}
+
+
+
+
+.on {
+	color: white;
+	background-color: #666666;
+}
+.off {
+	color: #aaaaaa;
+	background-color: #444444;
+}
+.total-off {
+	display: none;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cowbell Clicker</title>
+	<link rel="stylesheet" type="text/css" href="main.css" />
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="test.js"></script>
+</head>
+<body onload="onload()">
+	<div class="sidebar">
+		<button id="build" class="tab">Buildings</button>
+		<button id="setting" class="tab">Settings</button>
+		<button id="stats" class="tab">Stats</button>
+		<div id="build-div" class="tab-space">
+			<div id="build-space"></div>
+			<span class="space-words">Upgrades:</span>
+			<div class="scrollable" id="upgrade-space"></div>
+			<span class="space-words">Upgrades Bought:</span>
+			<div class="scrollable" id="purchased-upgrades"></div>
+			<span class="space-words">Achievements:</span>
+			<div class="scrollable" id="achievements"></div>
+		</div>
+		<div id="setting-div" class="tab-space">
+			Settings:
+			<p>
+				<button id="mute" type="button" value="0">Mute</button><span class="setting-descrip">Mutes/Unmutes the game sounds.</span>
+			</p>
+		</div>
+		<div id="stats-div" class="tab-space">
+			Stats:
+			<p>
+				Earnings:
+				<div>Notes (current): <span id="money-stat"></span> notes</div>
+				<div>Notes (this game): <span id="money-this-game-stat"></span> notes</div>
+				<div>Notes (all time): <span id="money-all-time-stat"></span> notes</div>
+				<div>Clicks: <span id="click-stat"></span> clicks</div>
+				<div>Notes from Clicks: <span id="click-money-stat"></span> notes</div>
+			</p>
+		</div>
+	</div>
+	<div class="midbar">
+		<div id="money-bar"><span id="money-el"></span> notes</div>
+		<div id="mps-bar"><span id="mps-el"></span> notes/sec</div>
+		<div id="mpc-bar"><span id="mpc-el"></span> notes/click</div>
+		<img src="cowbell2.png" alt="COWBELL" id="clicker" />
+		<div id="special"><img src="special.png" alt="SPECIAL" /></div>
+	</div>
+	<div class="rightbar">
+		<div class="clicktrack">
+		
+			<canvas id="clicktrack-canvas"></canvas>
+		</div>
+		<div class="selector">
+		</div>
+	</div>
+</body>
+</html>
