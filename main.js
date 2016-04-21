@@ -58,6 +58,17 @@ function onload() {
 		build.appendChild(m_build);
 	}
 	
+	var selector = document.getElementById("clicktrack-dropdown");
+	for (var i = 0; i < game.clicktracks.length; i++){
+		if (game.clicktracks[i].unlocked){
+			var optionEl = document.createElement("option");
+			optionEl.value = game.clicktracks[i].value;
+			optionEl.innerHTML = game.clicktracks[i].name;
+			selector.appendChild(optionEl);
+		}
+	}
+	selector.style.display = "none"; //will be set when loading/when the upgrade is bought
+	
 	var clicker = document.getElementById("clicker");
 	clicker.addEventListener("mousedown", function () {
 		game.click();
@@ -80,6 +91,12 @@ function onload() {
 		}
 	}
 	
+	var softResetEl = document.getElementById("soft-reset");
+	softResetEl.addEventListener("click", function() {game.softreset();});
+	
+	var hardResetEl = document.getElementById("hard-reset");
+	hardResetEl.addEventListener("click", function() {game.hardreset(1);});
+	
 	var mute = document.getElementById("mute");
 	mute.addEventListener("click", function() {
 		game.togglemute(mute);
@@ -87,81 +104,85 @@ function onload() {
 	
 	game.uitick();
 	
-	game.timeoutPointer = setTimeout(game.gametick, 100, game);
+	game.timeoutPointer = setTimeout(game.gametick, 33, game);
 }
 
 function Game() {
 	this.buildings = [
-		{name: "Cowbell", description: "More cowbells to click!", num: 0, cost: 10, growth: 1.15, mps: 0.2},
+		{name: "Clickers", description: "Clicks the cowbell for you!", num: 0, cost: 10, growth: 1.15, mps: 0.2},
 		{name: "Band", description: "A band to help bang the cowbell!", num: 0, cost: 150, growth: 1.15, mps: 2},
 		{name: "Synthesizer", description: "Digitally construct more cowbell!", num: 0, cost: 1000, growth: 1.15, mps: 6},
-		{name: "Mine", description: "Mine materials for more cowbells!", num: 0, cost: 75000, growth: 1.15, mps: 30},
-		{name: "Virtual Reality", description: "Fill other worlds with cowbell!", num: 0, cost: 420000, growth: 1.15, mps: 60},
-		{name: "Solar Panels", description: "Turn solar enery in to acoustics!", num: 0, cost: 6000000, growth: 1.15, mps: 300},
-		{name: "Amplifier", description: "Amplify old cowbells to faint to hear!", num: 0, cost: 100000000, growth: 1.15, mps: 2000},
-		{name: "Magician", description: "Use magic to create more cowbell!", num: 0, cost: 5000000000, growth: 1.15, mps: 25000}
+		{name: "Mine", description: "Mine materials for more cowbells!", num: 0, cost: 40000, growth: 1.15, mps: 35},
+		{name: "Virtual Reality", description: "Create new world to fill with cowbell!", num: 0, cost: 240000, growth: 1.15, mps: 75},
+		{name: "Solar Panels", description: "Turn the sun's energy in to more cowbell!", num: 0, cost: 2000000, growth: 1.15, mps: 500},
+		{name: "Amplifier", description: "Amplify old cowbells to faint to hear!", num: 0, cost: 36000000, growth: 1.15, mps: 3000},
+		{name: "Magician", description: "Use magic to create more cowbell!", num: 0, cost: 1000000000, growth: 1.15, mps: 25000}
 	];
 	//Engineers/Scientists?
 	
 	//upgrades and achievements are essentially lists of listeners which will be notfied at every game tick
 	//When unlocked/achieved, they will be removed from the original list as a deregistration from the notifier.
 	this.upgrades = [
-		{id: 1, disp: 1, cost: 50, name: "Double or Nothing", description: "Doubles the notes per second from Cowbells", builds: [1,0,0,0,0,0,0,0]},
-		{id: 2, disp: 2, cost: 200, name: "Robotic Cowbells", description: "Doubles the notes per second from Cowbells", builds: [10,0,0,0,0,0,0,0], upgrades: [1]},
-		{id: 3, disp: 3, cost: 50000, name: "25 Cowbells", description: "Doubles blah balh", builds: [25,0,0,0,0,0,0,0], upgrades: [2]},
-		{id: 4, disp: 4, cost: 200000, name: "50 Cowbells", description: "Doubles blah again", builds: [50,0,0,0,0,0,0,0], upgrades: [3]},
-		{id: 5, disp: 5, cost: 5000000, name: "100 Cowbells", description: "Double you know the drill", builds: [100,0,0,0,0,0,0,0], upgrades: [4]},
-		{id: 6, disp: 6, cost: 20000000, name: "150 Cowbells", description: "Ridiculous", builds: [150,0,0,0,0,0,0,0], upgrades: [5]},
-		{id: 7, disp: 7, cost: 500000000, name: "200 Cowbells", description: "Another One", builds: [200,0,0,0,0,0,0,0], upgrades: [6]},
-		{id: 8, disp: 8, cost: 50, name: "1 Band", description: "Doubles the notes per second from Band", builds: [0,1,0,0,0,0,0,0]},
-		{id: 9, disp: 9, cost: 200, name: "10 Band", description: "Doubles the notes per second from Band", builds: [0,10,0,0,0,0,0,0], upgrades: [8]},
-		{id: 10, disp: 10, cost: 50000, name: "25 Band", description: "Doubles blah balh", builds: [0,25,0,0,0,0,0,0], upgrades: [9]},
-		{id: 11, disp: 11, cost: 200000, name: "50 Band", description: "Doubles blah again", builds: [0,50,0,0,0,0,0,0], upgrades: [10]},
-		{id: 12, disp: 12, cost: 5000000, name: "100 Band", description: "Double you know the drill", builds: [0,100,0,0,0,0,0,0], upgrades: [11]},
-		{id: 13, disp: 13, cost: 20000000, name: "150 Band", description: "Ridiculous", builds: [0,150,0,0,0,0,0,0], upgrades: [12]},
-		{id: 14, disp: 14, cost: 500000000, name: "200 Band", description: "Another One", builds: [0,200,0,0,0,0,0,0], upgrades: [13]},
-		{id: 15, disp: 15, cost: 50, name: "1 Synth", description: "Doubles the notes per second from Synth", builds: [0,0,1,0,0,0,0,0]},
-		{id: 16, disp: 16, cost: 200, name: "10 Synth", description: "Doubles the notes per second from Synth", builds: [0,0,10,0,0,0,0,0], upgrades: [15]},
-		{id: 17, disp: 17, cost: 50000, name: "25 Synth", description: "Doubles blah balh", builds: [0,0,25,0,0,0,0,0], upgrades: [16]},
-		{id: 18, disp: 18, cost: 200000, name: "50 Synth", description: "Doubles blah again", builds: [0,0,50,0,0,0,0,0], upgrades: [17]},
-		{id: 19, disp: 19, cost: 5000000, name: "100 Synth", description: "Double you know the drill", builds: [0,0,100,0,0,0,0,0], upgrades: [18]},
-		{id: 20, disp: 20, cost: 20000000, name: "150 Synth", description: "Ridiculous", builds: [0,0,150,0,0,0,0,0], upgrades: [19]},
-		{id: 21, disp: 21, cost: 500000000, name: "200 Synth", description: "Another One", builds: [0,0,200,0,0,0,0,0], upgrades: [20]},
-		{id: 22, disp: 22, cost: 50, name: "1 Mine", description: "Doubles the notes per second from Mine", builds: [0,0,0,1,0,0,0,0]},
-		{id: 23, disp: 23, cost: 200, name: "10 Mine", description: "Doubles the notes per second from Mine", builds: [0,0,0,10,0,0,0,0], upgrades: [22]},
-		{id: 24, disp: 24, cost: 50000, name: "25 Mine", description: "Doubles blah balh", builds: [0,0,0,25,0,0,0,0], upgrades: [23]},
-		{id: 25, disp: 25, cost: 200000, name: "50 Mine", description: "Doubles blah again", builds: [0,0,0,50,0,0,0,0], upgrades: [24]},
-		{id: 26, disp: 26, cost: 5000000, name: "100 Mine", description: "Double you know the drill", builds: [0,0,0,100,0,0,0,0], upgrades: [25]},
-		{id: 27, disp: 27, cost: 20000000, name: "150 Mine", description: "Ridiculous", builds: [0,0,0,150,0,0,0,0], upgrades: [26]},
-		{id: 28, disp: 28, cost: 500000000, name: "200 Mine", description: "Another One", builds: [0,0,0,200,0,0,0,0], upgrades: [27]},
-		{id: 29, disp: 29, cost: 50, name: "1 Virtual Reality", description: "Doubles the notes per second from Virtual Reality", builds: [0,0,0,0,1,0,0,0]},
-		{id: 30, disp: 30, cost: 200, name: "10 Virtual Reality", description: "Doubles the notes per second from Virtual Reality", builds: [0,0,0,0,10,0,0,0], upgrades: [29]},
-		{id: 31, disp: 31, cost: 50000, name: "25 Virtual Reality", description: "Doubles blah balh", builds: [0,0,0,0,25,0,0,0], upgrades: [30]},
-		{id: 32, disp: 32, cost: 200000, name: "50 Virtual Reality", description: "Doubles blah again", builds: [0,0,0,0,50,0,0,0], upgrades: [31]},
-		{id: 33, disp: 33, cost: 5000000, name: "100 Virtual Reality", description: "Double you know the drill", builds: [0,0,0,0,100,0,0,0], upgrades: [32]},
-		{id: 34, disp: 34, cost: 20000000, name: "150 Virtual Reality", description: "Ridiculous", builds: [0,0,0,0,150,0,0,0], upgrades: [33]},
-		{id: 35, disp: 35, cost: 500000000, name: "200 Virtual Reality", description: "Another One", builds: [0,0,0,0,200,0,0,0], upgrades: [34]},
-		{id: 36, disp: 36, cost: 50, name: "1 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,1,0,0]},
-		{id: 37, disp: 37, cost: 200, name: "10 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,10,0,0], upgrades: [36]},
-		{id: 38, disp: 38, cost: 50000, name: "25 Solar Panels", description: "Doubles blah balh", builds: [0,0,0,0,0,25,0,0], upgrades: [37]},
-		{id: 39, disp: 39, cost: 200000, name: "50 Solar Panels", description: "Doubles blah again", builds: [0,0,0,0,0,50,0,0], upgrades: [38]},
-		{id: 40, disp: 40, cost: 5000000, name: "100 Solar Panels", description: "Double you know the drill", builds: [0,0,0,0,0,100,0,0], upgrades: [39]},
-		{id: 41, disp: 41, cost: 20000000, name: "150 Solar Panels", description: "Ridiculous", builds: [0,0,0,0,0,150,0,0], upgrades: [40]},
-		{id: 42, disp: 42, cost: 500000000, name: "200 Solar Panels", description: "Another One", builds: [0,0,0,0,0,200,0,0], upgrades: [41]},
-		{id: 43, disp: 43, cost: 50, name: "1 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,1,0]},
-		{id: 44, disp: 44, cost: 200, name: "10 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,10,0], upgrades: [43]},
-		{id: 45, disp: 45, cost: 50000, name: "25 Amplifiers", description: "Doubles blah balh", builds: [0,0,0,0,0,0,25,0], upgrades: [44]},
-		{id: 46, disp: 46, cost: 200000, name: "50 Amplifiers", description: "Doubles blah again", builds: [0,0,0,0,0,0,50,0], upgrades: [45]},
-		{id: 47, disp: 47, cost: 5000000, name: "100 Amplifiers", description: "Double you know the drill", builds: [0,0,0,0,0,0,100,0], upgrades: [46]},
-		{id: 48, disp: 48, cost: 20000000, name: "150 Amplifiers", description: "Ridiculous", builds: [0,0,0,0,0,0,150,0], upgrades: [47]},
-		{id: 49, disp: 49, cost: 500000000, name: "200 Amplifiers", description: "Another One", builds: [0,0,0,0,0,0,200,0], upgrades: [48]},
-		{id: 50, disp: 50, cost: 50, name: "1 Magicians", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,1]},
-		{id: 51, disp: 51, cost: 200, name: "10 Magicians", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,10], upgrades: [50]},
-		{id: 52, disp: 52, cost: 50000, name: "25 Magicians", description: "Doubles blah balh", builds: [0,0,0,0,0,0,0,25], upgrades: [51]},
-		{id: 53, disp: 53, cost: 200000, name: "50 Magicians", description: "Doubles blah again", builds: [0,0,0,0,0,0,0,50], upgrades: [52]},
-		{id: 54, disp: 54, cost: 5000000, name: "100 Magicians", description: "Double you know the drill", builds: [0,0,0,0,0,0,0,100], upgrades: [53]},
-		{id: 55, disp: 55, cost: 20000000, name: "150 Magicians", description: "Ridiculous", builds: [0,0,0,0,0,0,0,150], upgrades: [54]},
-		{id: 56, disp: 56, cost: 500000000, name: "200 Magicians", description: "Another One", builds: [0,0,0,0,0,0,0,200], upgrades: [55]},
+		{id: 1, disp: 1, cost: 50, name: "Faster Clickers", description: "Doubles the notes per second from Clickers", builds: [1,0,0,0,0,0,0,0]},
+		{id: 2, disp: 2, cost: 200, name: "Harder Clickers", description: "Doubles the notes per second from Clickers", builds: [10,0,0,0,0,0,0,0], upgrades: [1]},
+		{id: 3, disp: 3, cost: 10000, name: "Mechanical Clickers", description: "Doubles the notes per second from Clickers", builds: [25,0,0,0,0,0,0,0], upgrades: [2], flavor: "Much louder than the original kind, but I swear it's faster"},
+		{id: 4, disp: 4, cost: 600000, name: "Robotic Clickers", description: "Doubles the notes per second from Clickers", builds: [50,0,0,0,0,0,0,0], upgrades: [3]},
+		{id: 5, disp: 5, cost: 1500000000, name: "Intelligent Clickers", description: "Doubles the notes per second from Clickers", builds: [100,0,0,0,0,0,0,0], upgrades: [4]},
+		{id: 6, disp: 6, cost: 2000000000000, name: "Sentient Clickers", description: "Doubles the notes per second from Clickers", builds: [150,0,0,0,0,0,0,0], upgrades: [5], flavor: "Has science gone too far?"},
+		{id: 7, disp: 7, cost: 5000000000000000, name: "Overlord Clickers", description: "Doubles the notes per second from Clickers", builds: [200,0,0,0,0,0,0,0], upgrades: [6]},
+		{id: 8, disp: 8, cost: 750, name: "We're an American Band", description: "Doubles the notes per second from Bands", builds: [0,1,0,0,0,0,0,0], flavor: "Grand Funk Railroad"},
+		{id: 9, disp: 9, cost: 3000, name: "Don't Fear the Reaper", description: "Doubles the notes per second from Bands", builds: [0,10,0,0,0,0,0,0], upgrades: [8], flavor: "Blue Öyster Cult"},
+		{id: 10, disp: 10, cost: 150000, name: "King of Rock", description: "Doubles the notes per second from Bands", builds: [0,25,0,0,0,0,0,0], upgrades: [9], flavor: "Run DMC"},
+		{id: 11, disp: 11, cost: 10000000, name: "Hey Ladies", description: "Doubles the notes per second from Bands", builds: [0,50,0,0,0,0,0,0], upgrades: [10], flavor: "Beastie Boys"},
+		{id: 12, disp: 12, cost: 20000000000, name: "Honky Tonk Woman", description: "Doubles the notes per second from Bands", builds: [0,100,0,0,0,0,0,0], upgrades: [11], flavor: "Rolling Stones"},
+		{id: 13, disp: 13, cost: 50000000000000, name: "Hair of the Dog", description: "Doubles the notes per second from Bands", builds: [0,150,0,0,0,0,0,0], upgrades: [12], flavor: "Nazareth"},
+		{id: 14, disp: 14, cost: 50000000000000000, name: "Low Rider", description: "Doubles the notes per second from Bands", builds: [0,200,0,0,0,0,0,0], upgrades: [13], flavor: "War"},
+		{id: 15, disp: 15, cost: 5000, name: "1 Synth", description: "Doubles the notes per second from Synths", builds: [0,0,1,0,0,0,0,0]},
+		{id: 16, disp: 16, cost: 50000, name: "10 Synth", description: "Doubles the notes per second from Synths", builds: [0,0,10,0,0,0,0,0], upgrades: [15]},
+		{id: 17, disp: 17, cost: 1000000, name: "25 Synth", description: "Doubles blah balh", builds: [0,0,25,0,0,0,0,0], upgrades: [16]},
+		{id: 18, disp: 18, cost: 60000000, name: "50 Synth", description: "Doubles blah again", builds: [0,0,50,0,0,0,0,0], upgrades: [17]},
+		{id: 19, disp: 19, cost: 120000000000, name: "100 Synth", description: "Double you know the drill", builds: [0,0,100,0,0,0,0,0], upgrades: [18]},
+		{id: 20, disp: 20, cost: 200000000000000, name: "150 Synth", description: "Ridiculous", builds: [0,0,150,0,0,0,0,0], upgrades: [19]},
+		{id: 21, disp: 21, cost: 280000000000000000, name: "200 Synth", description: "Another One", builds: [0,0,200,0,0,0,0,0], upgrades: [20]},
+		{id: 22, disp: 22, cost: 100000, name: "1 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,1,0,0,0,0]},
+		{id: 23, disp: 23, cost: 2000000, name: "10 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,10,0,0,0,0], upgrades: [22]},
+		{id: 24, disp: 24, cost: 35000000, name: "25 Mine", description: "Doubles blah balh", builds: [0,0,0,25,0,0,0,0], upgrades: [23]},
+		{id: 25, disp: 25, cost: 2250000000, name: "50 Mine", description: "Doubles blah again", builds: [0,0,0,50,0,0,0,0], upgrades: [24]},
+		{id: 26, disp: 26, cost: 4750000000000, name: "100 Mine", description: "Double you know the drill", builds: [0,0,0,100,0,0,0,0], upgrades: [25]},
+		{id: 27, disp: 27, cost: 7700000000000000, name: "150 Mine", description: "Ridiculous", builds: [0,0,0,150,0,0,0,0], upgrades: [26]},
+		{id: 28, disp: 28, cost: 11000000000000000000, name: "200 Mine", description: "Another One", builds: [0,0,0,200,0,0,0,0], upgrades: [27]},
+		{id: 29, disp: 29, cost: 1000000, name: "1 Virtual Reality", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,1,0,0,0]},
+		{id: 30, disp: 30, cost: 15000000, name: "10 Virtual Reality", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,10,0,0,0], upgrades: [29]},
+		{id: 31, disp: 31, cost: 200000000, name: "25 Virtual Reality", description: "Doubles blah balh", builds: [0,0,0,0,25,0,0,0], upgrades: [30]},
+		{id: 32, disp: 32, cost: 15000000000, name: "50 Virtual Reality", description: "Doubles blah again", builds: [0,0,0,0,50,0,0,0], upgrades: [31]},
+		{id: 33, disp: 33, cost: 30000000000000, name: "100 Virtual Reality", description: "Double you know the drill", builds: [0,0,0,0,100,0,0,0], upgrades: [32]},
+		{id: 34, disp: 34, cost: 50000000000000000, name: "150 Virtual Reality", description: "Ridiculous", builds: [0,0,0,0,150,0,0,0], upgrades: [33]},
+		{id: 35, disp: 35, cost: 65000000000000000000, name: "200 Virtual Reality", description: "Another One", builds: [0,0,0,0,200,0,0,0], upgrades: [34]},
+		{id: 36, disp: 36, cost: 7000000, name: "1 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,1,0,0]},
+		{id: 37, disp: 37, cost: 100000000, name: "10 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,10,0,0], upgrades: [36]},
+		{id: 38, disp: 38, cost: 2000000000, name: "25 Solar Panels", description: "Doubles blah balh", builds: [0,0,0,0,0,25,0,0], upgrades: [37]},
+		{id: 39, disp: 39, cost: 125000000000, name: "50 Solar Panels", description: "Doubles blah again", builds: [0,0,0,0,0,50,0,0], upgrades: [38]},
+		{id: 40, disp: 40, cost: 240000000000000, name: "100 Solar Panels", description: "Double you know the drill", builds: [0,0,0,0,0,100,0,0], upgrades: [39]},
+		{id: 41, disp: 41, cost: 390000000000000000, name: "150 Solar Panels", description: "Ridiculous", builds: [0,0,0,0,0,150,0,0], upgrades: [40]},
+		{id: 42, disp: 42, cost: 550000000000000000000, name: "200 Solar Panels", description: "Another One", builds: [0,0,0,0,0,200,0,0], upgrades: [41]},
+		{id: 43, disp: 43, cost: 100000000, name: "1 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,1,0]},
+		{id: 44, disp: 44, cost: 1600000000, name: "10 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,10,0], upgrades: [43]},
+		{id: 45, disp: 45, cost: 35000000000, name: "25 Amplifiers", description: "Doubles blah balh", builds: [0,0,0,0,0,0,25,0], upgrades: [44]},
+		{id: 46, disp: 46, cost: 2000000000000, name: "50 Amplifiers", description: "Doubles blah again", builds: [0,0,0,0,0,0,50,0], upgrades: [45]},
+		{id: 47, disp: 47, cost: 4200000000000000, name: "100 Amplifiers", description: "Double you know the drill", builds: [0,0,0,0,0,0,100,0], upgrades: [46]},
+		{id: 48, disp: 48, cost: 6666000000000000000, name: "150 Amplifiers", description: "Ridiculous", builds: [0,0,0,0,0,0,150,0], upgrades: [47]},
+		{id: 49, disp: 49, cost: 10000000000000000000000, name: "200 Amplifiers", description: "Another One", builds: [0,0,0,0,0,0,200,0], upgrades: [48]},
+		{id: 50, disp: 50, cost: 10000000000, name: "1 Magicians", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,1]},
+		{id: 51, disp: 51, cost: 40000000000, name: "10 Magicians", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,10], upgrades: [50]},
+		{id: 52, disp: 52, cost: 800000000000, name: "25 Magicians", description: "Doubles blah balh", builds: [0,0,0,0,0,0,0,25], upgrades: [51]},
+		{id: 53, disp: 53, cost: 50000000000000, name: "50 Magicians", description: "Doubles blah again", builds: [0,0,0,0,0,0,0,50], upgrades: [52]},
+		{id: 54, disp: 54, cost: 100000000000000000, name: "100 Magicians", description: "Double you know the drill", builds: [0,0,0,0,0,0,0,100], upgrades: [53]},
+		{id: 55, disp: 55, cost: 190000000000000000000, name: "150 Magicians", description: "Ridiculous", builds: [0,0,0,0,0,0,0,150], upgrades: [54]},
+		{id: 56, disp: 56, cost: 250000000000000000000000, name: "200 Magicians", description: "Another One", builds: [0,0,0,0,0,0,0,200], upgrades: [55]},
+		{id: 57, disp: 100, cost: 10000000, name: "Click Track (TODO)", description: "Unlocks the clicktrack, with a basic track", builds:[50,10,10,0,0,0,0,0], clicks:[1000,100000]},
+		{id: 58, disp: 101, cost: 50000000, name: "New Track (TODO)", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[1000,200000], upgrades:[57], flavor: "A machine could drum this pretty easy"},
+		{id: 59, disp: 102, cost: 500000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[1000,2000000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal..."},
+		{id: 60, disp: 103, cost: 5000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[1000,20000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert"}
 	];
 	this.unlockedUpgrades = [];
 	this.boughtUpgrades = [];
@@ -176,13 +197,15 @@ function Game() {
 	//upgrades and achievements affected by load
 	
 	this.clicktracks = [
-		{id: 1, name: "Basic Clicktrack", bpm: 120, clicks: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]}
+		{id: 1, value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
+		{id: 2, value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,8.5,10,11,11.75,12,13,14,14.75,15], length: 16, clicked: []}//Animusic - Drum Machine
+		//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
+		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
 	];
 	
 	this.money = 0; //Loadable
 	this.mps = 0;
 	this.clicks = 0; //Loadble
-	this.clickpower = 1;
 	this.clickmoney = 0; //Loadable
 	this.moneythisgame = 0; //Loadable
 	this.moneyalltime = 0; //Loadable
@@ -190,12 +213,26 @@ function Game() {
 	this.special = undefined; //Only supports one special at a time?
 	this.tonextspecial = this.getNextSpecialTime();
 	
+	this.currentclicktrack = 0; //index not id
+	this.consecutiveclicktrack = 0;
+	this.timeclicktrack = 0;
+	
+	this.prestige = 0; //Loadable
+	this.prestigecount = 0; //Loadable
+	
 	this.sounds = [];
 	this.muted = false;
 	this.suffix = largeSuffixes; //Will be configurable setting TODO
 	
 	this.lastTick = Date.now();
 	this.timeSinceLastUIUpdate = 0;
+	
+	if (this.load()){
+		console.log("Load was successful");
+	} else {
+		console.log("Load was unsuccessful");
+	}
+	this.tonextsave = 60000;
 	
 	this.timeoutPointer;
 }
@@ -351,11 +388,16 @@ Game.prototype.globalMulti = function () {
 			ret *= 3;
 		}
 	}
+	ret *= (1 + this.prestigeBonus());
 	return ret;
 }
 
+Game.prototype.prestigeBonus = function () {
+	return this.prestige * 0.02;
+}
+
 Game.prototype.moneyPerClick = function () {
-	var ret = this.clickpower;
+	var ret = 1;
 	if (this.special && this.special.started && !this.special.ended){
 		if (this.special.effect == "click"){
 			ret += this.mps*0.15;
@@ -387,6 +429,7 @@ Game.prototype.click = function(){
 			aud.play();
 		}
 	}
+	this.clicktrackcheck();
 }
 
 Game.prototype.gametick = function(game){
@@ -400,7 +443,7 @@ Game.prototype.gametick = function(game){
 	game.moneythisgame += moneyChange;
 	game.moneyalltime += moneyChange;
 	
-	 if (!game.special) {
+	if (!game.special) {
 		var specEl = document.getElementById("special");
 		game.tonextspecial -= delta;
 		if (game.tonextspecial <= 0){
@@ -422,6 +465,8 @@ Game.prototype.gametick = function(game){
 		}
 	}
 	
+	game.clicktracktick(delta);
+	
 	var monEl = document.getElementById("money-el");
 	var format = game.formatlarge(game.money);
 	monEl.innerHTML = isNaN(format) ? format : game.money.toFixed(0);
@@ -433,6 +478,7 @@ Game.prototype.gametick = function(game){
 	mpcEl.innerHTML = isNaN(format) ? format : format.toFixed(2);
 	
 	game.timeSinceLastUIUpdate += delta;
+	game.tonextsave -= delta;
 	
 	var buildEl = document.getElementById("build-space");
 	for (var i = 0; i < game.buildings.length; i++){
@@ -511,12 +557,17 @@ Game.prototype.gametick = function(game){
 		boughtEl.appendChild(upEl);
 	}
 	
+	if (game.tonextsave < 0){
+		game.save();
+		game.tonextsave = 60000;
+	}
+	
 	if (game.timeSinceLastUIUpdate > 1000){
 		game.uitick();
 		game.timeSinceLastUIUpdate = 0;
 	}
 	
-	game.timeoutPointer = setTimeout(game.gametick, 100, game); //God Bless Functional Programming
+	game.timeoutPointer = setTimeout(game.gametick, 33, game); //God Bless Functional Programming
 }
 
 Game.prototype.uitick = function(){
@@ -635,10 +686,18 @@ Game.prototype.uitick = function(){
 	document.getElementById("click-stat").innerHTML = (isNaN(format) ? format : format.toFixed(2));
 	format = this.formatlarge(this.clickmoney);
 	document.getElementById("click-money-stat").innerHTML = (isNaN(format) ? format : format.toFixed(2));
+	format = this.formatlarge(this.prestigeonreset());
+	document.getElementById("prestige-gain").innerHTML = (isNaN(format) ? format : format.toFixed(0));
+	document.getElementById("prestige-on-reset").innerHTML = (isNaN(format) ? format : format.toFixed(0));
+	format = this.formatlarge(this.prestige);
+	document.getElementById("prestige").innerHTML = (isNaN(format) ? format : format.toFixed(0));
+	format = this.formatlarge(this.prestigeBonus() * 100);
+	document.getElementById("prestige-bonus").innerHTML = (isNaN(format) ? format : format.toFixed(0));
 	
 	var buildEls = document.getElementsByClassName("building");
 	var multi = this.globalMulti();
 	for (var i = 0; i < this.buildings.length; i++){
+		buildEls[i].childNodes[1].innerHTML = this.buildings[i].num;
 		buildEls[i].childNodes[4].childNodes[3].innerHTML = this.formatlarge(this.buildingMps(i) * multi);
 	}
 	
@@ -707,6 +766,268 @@ Game.prototype.formatlarge = function(number) {
 
 Game.prototype.getNextSpecialTime = function () {
 	return 1000 * (240 + Math.random() * 120);
+}
+
+Game.prototype.clicktracktick = function(delta){
+	//Lots of canvas drawing
+	if (this.clicktracks[this.currentclicktrack]){
+		var cc = this.clicktracks[this.currentclicktrack];
+		this.timeclicktrack += (cc.bpm * delta / 60000);
+		for (var i = 0; i < cc.clicks.length; i++){
+			if (this.timeclicktrack - cc.clicks[i] > 2){
+				cc.clicked[i] = 0;
+			} else if (cc.clicks[i] - this.timeclicktrack > 2){
+				cc.clicked[i] = 0;
+				break;
+			}
+		}
+		if (this.timeclicktrack > cc.length){
+			this.timeclicktrack -= this.timeclicktrack;
+		}
+		//console.log(this.timeclicktrack);
+		//Here's where we draw on the canvas the next 6 beats of the click track
+		var found = false;
+		for (var i = 0; i < cc.clicks.length; i++){
+			if (Math.abs(this.timeclicktrack - cc.clicks[i]) < 0.2){
+				document.getElementById("placehold").style.display = "block";
+				found = true;
+				break;
+			}
+		}
+		if (!found){
+			document.getElementById("placehold").style.display = "none";
+		}
+	}
+}
+
+Game.prototype.clicktrackcheck = function () {
+	//If there's a note near (within 0.1 time + or - how about) that current time, click
+	if (this.clicktracks[this.currentclicktrack]){
+		var cc = this.clicktracks[this.currentclicktrack];
+		var delta = Date.now() - this.lastTick;
+		var actualTime = this.timeclicktrack + (cc.bpm * delta / 60000); //Because the click probably happened between ticks
+		var found = false;
+		for (var i = 0; i < cc.clicks.length; i++){
+			if (!cc.clicked[i]){
+				if (Math.abs(cc.clicks[i] - actualTime) < 0.2){
+					this.consecutiveclicktrack++;
+					cc.clicked[i] = 1;
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found){
+			this.consecutiveclicktrack = 0; //This only happens when clicked, not when a note passes and isn't clicked
+		}
+		console.log(this.consecutiveclicktrack)
+		//console.log(cc.clicked);
+	}
+	
+}
+
+Game.prototype.softreset = function () {
+	if (confirm("Do you want to rest and gain " + this.formatlarge(this.prestigeonreset()) + " prestige points?")){
+		//reset stats, buildings, upgrades and such
+		for (var i = 0; i < this.buildings.length; i++){
+			this.buildings[i].num = 0;
+		}
+		for (var i = this.unlockedUpgrades.length - 1; i >= 0; i--){
+			this.upgrades.push(this.unlockedUpgrades.splice(i,1)[0]);
+		}
+		for (var i = this.boughtUpgrades.length - 1; i >= 0; i--){
+			this.upgrades.push(this.boughtUpgrades.splice(i,1)[0]);
+		}
+		this.money = 0;
+		this.mps = 0;
+		this.clicks = 0;
+		this.clickpower = 1;
+		this.clickmoney = 0;
+		this.moneythisgame = 0;
+		this.special = undefined;
+		this.tonextspecial = this.getNextSpecialTime();
+		//grant prestige
+		this.prestige = Math.floor(Math.sqrt(this.moneyalltime / 1000000000000));
+		this.prestigecount++;
+		this.lastTick = Date.now();
+		this.timeSinceLastUIUpdate = 5000;
+		this.gametick(this); //Redraw the UI
+	}
+}
+
+Game.prototype.hardreset = function(l) {
+	if (l == 1){
+		if (confirm("WARNING: If you press OK here, you will lose ALL of your progress, including prestige. If you want to gain prestige, use the soft reset!")){
+			console.log("in here");
+			this.hardreset(2);
+		}
+	} else if (l > 1){
+		//reset
+		console.log("resetting");
+		for (var i = 0; i < this.buildings.length; i++){
+			this.buildings[i].num = 0;
+		}
+		for (var i = this.unlockedUpgrades.length - 1; i >= 0; i--){
+			this.upgrades.push(this.unlockedUpgrades.splice(i,1)[0]);
+		}
+		for (var i = this.boughtUpgrades.length - 1; i >= 0; i--){
+			this.upgrades.push(this.boughtUpgrades.splice(i,1)[0]);
+		}
+		for (var i = this.earnedAchievements.length - 1; i >= 0; i--){
+			this.achievements.push(this.earnedAchievements.splice(i,1)[0]);
+		}
+		for (var i = 0; i < this.clicktracks.length; i++){
+			this.clicktracks[i].unlocked = false;
+		}
+		this.money = 0;
+		this.mps = 0;
+		this.clicks = 0;
+		this.clickpower = 1;
+		this.clickmoney = 0;
+		this.moneythisgame = 0;
+		this.moneyalltime = 0;
+		this.special = undefined;
+		this.tonextspecial = this.getNextSpecialTime();
+		this.currentclicktrack = 0; //index not id
+		this.consecutiveclicktrack = 0;
+		this.timeclicktrack = 0;
+		this.prestige = 0;
+		this.prestigecount = 0;
+		this.lastTick = Date.now();
+		this.timeSinceLastUIUpdate = 5000;
+		this.gametick(this); //Redraw the UI
+	}
+}
+
+Game.prototype.prestigeonreset = function () {
+	var total = Math.floor(Math.sqrt(this.moneyalltime / 1000000000000));
+	return total - this.prestige;
+}
+
+Game.prototype.save = function() {
+	var buildSave = [];
+	for (var i = 0; i < this.buildings.length; i++){
+		buildSave.push(this.buildings[i].num);
+	}
+	var unlockedSave = [];
+	for (var i = 0; i < this.unlockedUpgrades.length; i++){
+		unlockedSave.push(this.unlockedUpgrades[i].id);
+	}
+	var boughtSave = [];
+	for (var i = 0; i < this.boughtUpgrades.length; i++){
+		boughtSave.push(this.boughtUpgrades[i].id);
+	}
+	var achieveSave = [];
+	for (var i = 0; i < this.earnedAchievements.length; i++){
+		achieveSave.push(this.earnedAchievements[i].id);
+	}
+	var clicktrackSave = [];
+	for (var i = 0; i < this.clicktracks.length; i++){
+		clicktrackSave.push(this.clicktracks[i].unlocked);
+	}
+	var gameState = {
+		buildings: buildSave,
+		unlockedUps: unlockedSave,
+		boughtUps: boughtSave,
+		achieves: achieveSave,
+		tracks: clicktrackSave,
+		money: this.money,
+		clicks: this.clicks,
+		clickmoney: this.clickmoney,
+		moneythisgame: this.moneythisgame,
+		moneyalltime: this.moneyalltime,
+		version: 1
+	}
+	localStorage.setItem('save', JSON.stringify(gameState));
+	console.log("Game saved");
+}
+
+Game.prototype.load = function () {
+	var gameState = JSON.parse(localStorage.getItem('save'));
+	if (gameState){
+		if (gameState.version == 1){
+			//load 'er up
+			//We'll start by verifying the upgrade/achieve ids
+			//We verify first, so that we don't have to undo all changes once we find an invalid entry
+			if (gameState.buildings.length != this.buildings.length){
+				return false;
+			}
+			for (var i = 0; i < gameState.unlockedUps.length; i++){
+				var found = false;
+				for (var j = 0; j < this.upgrades.length; j++){
+					if (gameState.unlockedUps[i] == this.upgrades[j].id){
+						found = true;
+						break;
+					}
+				}
+				if (!found){
+					return false;
+				}
+			}
+			for (var i = 0; i < gameState.boughtUps.length; i++){
+				var found = false;
+				for (var j = 0; j < this.upgrades.length; j++){
+					if (gameState.boughtUps[i] == this.upgrades[j].id){
+						found = true;
+						break;
+					}
+				}
+				if (!found){
+					return false;
+				}
+			}
+			for (var i = 0; i < gameState.achieves.length; i++){
+				var found = false;
+				for (var j = 0; j < this.achievements.length; j++){
+					if (gameState.achieves[i] == this.achievements[j].id){
+						found = true;
+						break;
+					}
+				}
+				if (!found){
+					return false;
+				}
+			}
+			//After that we'll unlocked/buy/earn all upgrade/achieves
+			for (var i = 0; i < gameState.buildings.length; i++){
+				this.buildings[i].num = gameState.buildings[i];
+			}
+			for (var i = 0; i < gameState.unlockedUps.length; i++){
+				for (var j = this.upgrades.length - 1; j >= 0; j--){
+					if (this.upgrades[j].id == gameState.unlockedUps[i]){
+						this.unlockedUpgrades.push(this.upgrades.splice(j,1)[0]);
+					}
+				}
+			}
+			for (var i = 0; i < gameState.boughtUps.length; i++){
+				for (var j = this.upgrades.length - 1; j >= 0; j--){
+					if (this.upgrades[j].id == gameState.boughtUps[i]){
+						this.boughtUpgrades.push(this.upgrades.splice(j,1)[0]);
+					}
+				}
+			}
+			for (var i = 0; i < gameState.achieves.length; i++){
+				for (var j = this.achievements.length - 1; j >= 0; j--){
+					if (this.achievements[j].id == gameState.achieves[i]){
+						this.earnedAchievements.push(this.achievements.splice(j,1)[0]);
+					}
+				}
+			}
+			//Then we'll load stats
+			this.money = gameState.money;
+			this.clicks = gameState.clicks;
+			this.clickmoney = gameState.clickmoney;
+			this.moneythisgame = gameState.moneythisgame;
+			this.moneyalltime = gameState.moneyalltime;
+			//return true
+			gameState = undefined;
+			return true;
+		} else {
+			console.log("Your save file has an invalid version");
+			return false;
+		}
+	}
+	return false;
 }
 
 function Special () {

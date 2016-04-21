@@ -120,6 +120,13 @@ div:hover > .hover {
 	font-style: italic;
 	color: #bbb;
 }
+#clicktrack-dropdown {
+	top: 0px;
+}
+#clicktrack-canvas {
+	height: 400px;
+	width: 200px;
+}
 
 
 
