@@ -787,16 +787,16 @@ Game.prototype.clicktracktick = function(delta){
 		//console.log(this.timeclicktrack);
 		//Here's where we draw on the canvas the next 6 beats of the click track
 		var found = false;
-		for (var i = 0; i < cc.clicks.length; i++){
-			if (Math.abs(this.timeclicktrack - cc.clicks[i]) < 0.2){
-				document.getElementById("placehold").style.display = "block";
-				found = true;
-				break;
-			}
-		}
-		if (!found){
-			document.getElementById("placehold").style.display = "none";
-		}
+		//for (var i = 0; i < cc.clicks.length; i++){
+		//	if (Math.abs(this.timeclicktrack - cc.clicks[i]) < 0.2){
+		//		document.getElementById("placehold").style.display = "block";
+		//		found = true;
+		//		break;
+		//	}
+		//}
+		//if (!found){
+		//	document.getElementById("placehold").style.display = "none";
+		//}
 	}
 }
 
