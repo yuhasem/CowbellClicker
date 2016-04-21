@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>Cowbell Clicker</title>
 	<link rel="stylesheet" type="text/css" href="main.css" />
 	<script type="text/javascript" src="main.js"></script>
 	<script type="text/javascript" src="test.js"></script>
+	<script type="text/javascript" src="canvaswrapper.js"></script>
 </head>
 <body onload="onload()">
 	<div class="sidebar">
@@ -21,6 +23,11 @@
 			<div class="scrollable" id="achievements"></div>
 		</div>
 		<div id="setting-div" class="tab-space">
+			Reset:
+			<p>
+				<button id="soft-reset" type="button">Prestige</button><span class="setting-descrip">You lose all building, notes, and upgrades, but you keep click tracks and earn <span id="prestige-on-reset"></span> Prestige Points</span><br>
+				<button id="hard-reset" type="button">Wipe Save</button><span class="setting-descrip">You lose everything.</span>
+			</p>
 			Settings:
 			<p>
 				<button id="mute" type="button" value="0">Mute</button><span class="setting-descrip">Mutes/Unmutes the game sounds.</span>
@@ -29,7 +36,13 @@
 		<div id="stats-div" class="tab-space">
 			Stats:
 			<p>
-				Earnings:
+				<strong>Prestige</strong>:
+				<div>Prestige: <span id="prestige"></span></div>
+				<div>Prestige Bonues: <span id="prestige-bonus"></span>%</div>
+				<div>Prestige Gain on Reset: <span id="prestige-gain"></span></div>
+			</p>
+			<p>
+				<strong>Earnings</strong>:
 				<div>Notes (current): <span id="money-stat"></span> notes</div>
 				<div>Notes (this game): <span id="money-this-game-stat"></span> notes</div>
 				<div>Notes (all time): <span id="money-all-time-stat"></span> notes</div>
@@ -46,12 +59,12 @@
 		<div id="special"><img src="special.png" alt="SPECIAL" /></div>
 	</div>
 	<div class="rightbar">
+		<select id="clicktrack-dropdown">
+		</select>
 		<div class="clicktrack">
-		
 			<canvas id="clicktrack-canvas"></canvas>
 		</div>
-		<div class="selector">
-		</div>
+		<div id="placehold">Button PlaceHolder</div>
 	</div>
 </body>
 </html>
