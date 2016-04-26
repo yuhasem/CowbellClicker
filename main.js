@@ -398,6 +398,15 @@ Game.prototype.prestigeBonus = function () {
 
 Game.prototype.moneyPerClick = function () {
 	var ret = 1;
+	if (this.currentclicktrack == 0){
+		ret += this.consecutiveclicktrack;
+	}
+	if (this.currentclicktrack == 1){
+		ret += this.consecutiveclicktrack * (this.consecutiveclicktrack + 1) / 2;
+	}
+	if (this.currentclicktrack > 1){
+		ret *= Math.pow(1.1, this.consecutiveclicktrack);
+	}
 	if (this.special && this.special.started && !this.special.ended){
 		if (this.special.effect == "click"){
 			ret += this.mps*0.15;
@@ -773,12 +782,26 @@ Game.prototype.clicktracktick = function(delta){
 	if (this.clicktracks[this.currentclicktrack]){
 		var cc = this.clicktracks[this.currentclicktrack];
 		this.timeclicktrack += (cc.bpm * delta / 60000);
+		var lastnote = 0;
+		var lastindex = -1;
 		for (var i = 0; i < cc.clicks.length; i++){
+			if (cc.clicks[i] < this.timeclicktrack){
+				lastnote = cc.clicks[i];
+				lastindex = i;
+			}
 			if (this.timeclicktrack - cc.clicks[i] > 2){
 				cc.clicked[i] = 0;
 			} else if (cc.clicks[i] - this.timeclicktrack > 2){
 				cc.clicked[i] = 0;
 				break;
+			}
+		}
+		if (Math.abs(this.timeclicktrack - lastnote) > 0.2){
+			if (lastindex > -1){
+				if (!cc.clicked[lastindex]){
+					this.consecutiveclicktrack = 0;
+					document.getElementById("consecutive-clicks").innerHTML = "0";
+				}
 			}
 		}
 		if (this.timeclicktrack > cc.length){
@@ -811,6 +834,7 @@ Game.prototype.clicktrackcheck = function () {
 			if (!cc.clicked[i]){
 				if (Math.abs(cc.clicks[i] - actualTime) < 0.2){
 					this.consecutiveclicktrack++;
+					document.getElementById("consecutive-clicks").innerHTML = this.consecutiveclicktrack;
 					cc.clicked[i] = 1;
 					found = true;
 					break;
