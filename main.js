@@ -198,7 +198,7 @@ function Game() {
 	
 	this.clicktracks = [
 		{id: 1, value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
-		{id: 2, value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,8.5,10,11,11.75,12,13,14,14.75,15], length: 16, clicked: []}//Animusic - Drum Machine
+		{id: 2, value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,8.5,10,11,11.75,12,13,14,15,15.75,16], length: 16, clicked: []}//Animusic - Drum Machine
 		//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
 		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
 	];
@@ -216,6 +216,9 @@ function Game() {
 	this.currentclicktrack = 0; //index not id
 	this.consecutiveclicktrack = 0;
 	this.timeclicktrack = 0;
+	this.canvas = document.getElementById("clicktrack-canvas");
+	this.cheight = 400;
+	this.cwidth = 200;
 	
 	this.prestige = 0; //Loadable
 	this.prestigecount = 0; //Loadable
@@ -474,6 +477,9 @@ Game.prototype.gametick = function(game){
 		}
 	}
 	
+	//clear the canvas here
+	var ctx = game.canvas.getContext("2d");
+	ctx.clearRect(0,0,game.cwidth,game.cheight);
 	game.clicktracktick(delta);
 	
 	var monEl = document.getElementById("money-el");
@@ -808,13 +814,34 @@ Game.prototype.clicktracktick = function(delta){
 			this.timeclicktrack -= this.timeclicktrack;
 		}
 		//console.log(this.timeclicktrack);
-		//Here's where we draw on the canvas the next 6 beats of the click track
+		//Here's where we draw on the canvas the next 5 beats of the click track (at least 4 beats visible)
+		var ctx = this.canvas.getContext("2d");
+		ctx.fillStyle = "#FFFFFF"; //Why didn't this change the color?
+		ctx.moveTo(0,this.cheight*0.9);
+		ctx.lineTo(this.cwidth,this.cheight*0.9);
+		ctx.stroke();
+		var ctx = this.canvas.getContext("2d");
+		var x = this.cwidth/2;
 		var found = false;
+		//ctx.arc(x, y, radius, start-angle, end-angle) //not affected by moveTo
 		for (var i = 0; i < cc.clicks.length; i++){
 			if (Math.abs(this.timeclicktrack - cc.clicks[i]) < 0.2){
 				document.getElementById("placehold").style.display = "block";
 				found = true;
-				break;
+			}
+			if (cc.clicks[i] - this.timeclicktrack < 6 && cc.clicks[i] - this.timeclicktrack >= 0){
+				var dif = cc.clicks[i] - this.timeclicktrack;
+				var y = this.cheight*(0.9 - 0.2*dif);
+				ctx.beginPath();
+				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
+				ctx.stroke();
+			}
+			if ((cc.clicks[i] + cc.length) - this.timeclicktrack < 6 && (cc.clicks[i] + cc.length) - this.timeclicktrack >= 0){
+				var dif = (cc.clicks[i] + cc.length) - this.timeclicktrack;
+				var y = this.cheight*(0.9 - 0.2*dif);
+				ctx.beginPath();
+				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
+				ctx.stroke();
 			}
 		}
 		if (!found){
