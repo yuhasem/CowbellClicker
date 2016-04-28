@@ -59,15 +59,11 @@ function onload() {
 	}
 	
 	var selector = document.getElementById("clicktrack-dropdown");
-	for (var i = 0; i < game.clicktracks.length; i++){
-		if (game.clicktracks[i].unlocked){
-			var optionEl = document.createElement("option");
-			optionEl.value = game.clicktracks[i].value;
-			optionEl.innerHTML = game.clicktracks[i].name;
-			selector.appendChild(optionEl);
-		}
-	}
+	selector.addEventListener("change", function () {
+		game.trackchange(this.value);
+	});
 	selector.style.display = "none"; //will be set when loading/when the upgrade is bought
+	document.getElementById("consecutive-clicks").style.display = "none";
 	
 	var clicker = document.getElementById("clicker");
 	clicker.addEventListener("mousedown", function () {
@@ -113,7 +109,7 @@ function Game() {
 		{name: "Band", description: "A band to help bang the cowbell!", num: 0, cost: 150, growth: 1.15, mps: 2},
 		{name: "Synthesizer", description: "Digitally construct more cowbell!", num: 0, cost: 1000, growth: 1.15, mps: 6},
 		{name: "Mine", description: "Mine materials for more cowbells!", num: 0, cost: 40000, growth: 1.15, mps: 35},
-		{name: "Virtual Reality", description: "Create new world to fill with cowbell!", num: 0, cost: 240000, growth: 1.15, mps: 75},
+		{name: "Virtual Reality", description: "Create new worlds to fill with cowbell!", num: 0, cost: 240000, growth: 1.15, mps: 75},
 		{name: "Solar Panels", description: "Turn the sun's energy in to more cowbell!", num: 0, cost: 2000000, growth: 1.15, mps: 500},
 		{name: "Amplifier", description: "Amplify old cowbells to faint to hear!", num: 0, cost: 36000000, growth: 1.15, mps: 3000},
 		{name: "Magician", description: "Use magic to create more cowbell!", num: 0, cost: 1000000000, growth: 1.15, mps: 25000}
@@ -179,10 +175,10 @@ function Game() {
 		{id: 54, disp: 54, cost: 100000000000000000, name: "100 Magicians", description: "Double you know the drill", builds: [0,0,0,0,0,0,0,100], upgrades: [53]},
 		{id: 55, disp: 55, cost: 190000000000000000000, name: "150 Magicians", description: "Ridiculous", builds: [0,0,0,0,0,0,0,150], upgrades: [54]},
 		{id: 56, disp: 56, cost: 250000000000000000000000, name: "200 Magicians", description: "Another One", builds: [0,0,0,0,0,0,0,200], upgrades: [55]},
-		{id: 57, disp: 100, cost: 10000000, name: "Click Track (TODO)", description: "Unlocks the clicktrack, with a basic track", builds:[50,10,10,0,0,0,0,0], clicks:[1000,100000]},
-		{id: 58, disp: 101, cost: 50000000, name: "New Track (TODO)", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[1000,200000], upgrades:[57], flavor: "A machine could drum this pretty easy"},
-		{id: 59, disp: 102, cost: 500000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[1000,2000000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal..."},
-		{id: 60, disp: 103, cost: 5000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[1000,20000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert"}
+		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[1000,50000], upFunction: function(game) {game.clicktracks[0].unlocked = true;}},
+		{id: 58, disp: 101, cost: 50000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[1000,200000], upgrades:[57], flavor: "A machine could drum this pretty easy", upFunction: function(game) {game.clicktracks[1].unlocked = true;}},
+		{id: 59, disp: 102, cost: 500000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[1000,2000000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...", upFunction: function(game) {game.clicktracks[2].unlocked = true;}},
+		{id: 60, disp: 103, cost: 5000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[1000,20000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert", upFunction: function(game) {game.clicktracks[3].unlocked = true;}}
 	];
 	this.unlockedUpgrades = [];
 	this.boughtUpgrades = [];
@@ -197,8 +193,8 @@ function Game() {
 	//upgrades and achievements affected by load
 	
 	this.clicktracks = [
-		{id: 1, value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
-		{id: 2, value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,8.5,10,11,11.75,12,13,14,15,15.75,16], length: 16, clicked: []}//Animusic - Drum Machine
+		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
+		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,8.5,10,11,11.75,12,13,14,14.75,15], length: 16, clicked: []}//Animusic - Drum Machine
 		//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
 		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
 	];
@@ -213,7 +209,7 @@ function Game() {
 	this.special = undefined; //Only supports one special at a time?
 	this.tonextspecial = this.getNextSpecialTime();
 	
-	this.currentclicktrack = 0; //index not id
+	this.currentclicktrack = -1;
 	this.consecutiveclicktrack = 0;
 	this.timeclicktrack = 0;
 	this.canvas = document.getElementById("clicktrack-canvas");
@@ -236,6 +232,8 @@ function Game() {
 		console.log("Load was unsuccessful");
 	}
 	this.tonextsave = 60000;
+	
+	//Do some UI work here: Get the building costs/numbers to display the loaded values
 	
 	this.timeoutPointer;
 }
@@ -275,6 +273,9 @@ Game.prototype.upgrade = function (i) {
 	if (this.money >= toUpgrade.cost){
 		this.boughtUpgrades.push(this.unlockedUpgrades.splice(j, 1)[0]);
 		this.money -= toUpgrade.cost;
+		if (toUpgrade.upFunction){
+			toUpgrade.upFunction(this);
+		}
 		return true;
 	} else {
 		return false;
@@ -743,6 +744,41 @@ Game.prototype.uitick = function(){
 		achEl.appendChild(hover);
 		achieveEl.appendChild(achEl);
 	}
+	
+	if (this.hasUpgrade(57)){
+		var dropEl = document.getElementById("clicktrack-dropdown");
+		dropEl.innerHTML = "";
+		var optionEl = document.createElement("option");
+		optionEl.innerHTML = "None";
+		optionEl.value = "none";
+		dropEl.appendChild(optionEl);
+		var selectEl = document.createElement("option");
+		selectEl.innerHTML = "Basic Clicktrack";
+		selectEl.value = "base";
+		dropEl.appendChild(selectEl);
+		dropEl.style.display = "inline";
+		if (this.hasUpgrade(58)){
+			selectEl = document.createElement("option");
+			selectEl.innerHTML = "Drum Machine";
+			selectEl.value = "drummachine";
+			dropEl.appendChild(selectEl);
+		}
+		document.getElementById("consecutive-clicks").style.display = "inline";
+	}
+}
+
+Game.prototype.trackchange = function (value) {
+	for (var i = 0; i < this.clicktracks.length; i++){
+		if (this.clicktracks[i].value == value){
+			this.currentclicktrack = i;
+			this.timeclicktrack = -4;
+			this.consecutiveclicktrack = 0;
+			return;
+		}
+	}
+	this.currentclicktrack = -1;
+	this.timeclicktrack = 0;
+	this.consecutiveclicktrack = 0;
 }
 
 Game.prototype.tabswitch = function () {
@@ -816,19 +852,14 @@ Game.prototype.clicktracktick = function(delta){
 		//console.log(this.timeclicktrack);
 		//Here's where we draw on the canvas the next 5 beats of the click track (at least 4 beats visible)
 		var ctx = this.canvas.getContext("2d");
-		ctx.fillStyle = "#FFFFFF"; //Why didn't this change the color?
+		ctx.strokeStyle = "#999999";
 		ctx.moveTo(0,this.cheight*0.9);
 		ctx.lineTo(this.cwidth,this.cheight*0.9);
 		ctx.stroke();
-		var ctx = this.canvas.getContext("2d");
+		ctx.storkeStyle = "#FFFFFF";
 		var x = this.cwidth/2;
 		var found = false;
-		//ctx.arc(x, y, radius, start-angle, end-angle) //not affected by moveTo
 		for (var i = 0; i < cc.clicks.length; i++){
-			if (Math.abs(this.timeclicktrack - cc.clicks[i]) < 0.2){
-				document.getElementById("placehold").style.display = "block";
-				found = true;
-			}
 			if (cc.clicks[i] - this.timeclicktrack < 6 && cc.clicks[i] - this.timeclicktrack >= 0){
 				var dif = cc.clicks[i] - this.timeclicktrack;
 				var y = this.cheight*(0.9 - 0.2*dif);
@@ -843,9 +874,6 @@ Game.prototype.clicktracktick = function(delta){
 				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
 				ctx.stroke();
 			}
-		}
-		if (!found){
-			document.getElementById("placehold").style.display = "none";
 		}
 	}
 }
@@ -869,10 +897,8 @@ Game.prototype.clicktrackcheck = function () {
 			}
 		}
 		if (!found){
-			this.consecutiveclicktrack = 0; //This only happens when clicked, not when a note passes and isn't clicked
+			this.consecutiveclicktrack = 0;
 		}
-		console.log(this.consecutiveclicktrack)
-		//console.log(cc.clicked);
 	}
 	
 }
