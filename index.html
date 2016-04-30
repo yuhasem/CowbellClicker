@@ -23,6 +23,12 @@
 			<div class="scrollable" id="achievements"></div>
 		</div>
 		<div id="setting-div" class="tab-space">
+			Save:
+			<p>
+				<button id="save" type="button">Save Game</button><span class="setting-descrip">Saves the Game (game saves automatically every minute)</span><br>
+				<button id="import" type="button">Import (TODO)</button><br>
+				<button id="export" type="button">Export (TODO)</button>
+			</p>
 			Reset:
 			<p>
 				<button id="soft-reset" type="button">Prestige</button><span class="setting-descrip">You lose all building, notes, and upgrades, but you keep click tracks and earn <span id="prestige-on-reset"></span> Prestige Points</span><br>
@@ -34,7 +40,6 @@
 			</p>
 		</div>
 		<div id="stats-div" class="tab-space">
-			Stats:
 			<p>
 				<strong>Prestige</strong>:
 				<div>Prestige: <span id="prestige"></span></div>
@@ -48,6 +53,11 @@
 				<div>Notes (all time): <span id="money-all-time-stat"></span> notes</div>
 				<div>Clicks: <span id="click-stat"></span> clicks</div>
 				<div>Notes from Clicks: <span id="click-money-stat"></span> notes</div>
+			</p>
+			<p>
+				<strong>Other</strong>:
+				<div>Most consecutive notes hit: <span id="consec-stat"></span></div>
+				<div>Special Cowbells Clicked: <span id="special-stat"></span></div>
 			</p>
 		</div>
 	</div>

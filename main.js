@@ -72,7 +72,7 @@ function onload() {
 	
 	var specEl = document.getElementById("special");
 	specEl.addEventListener("mousedown", function () {
-		game.special.clicked();
+		game.special.clicked(game);
 		this.style.display = "none";
 	});
 	
@@ -86,6 +86,15 @@ function onload() {
 			tabspaces[i].style.display =  "none";
 		}
 	}
+	
+	var saveEl = document.getElementById("save");
+	saveEl.addEventListener("click", function () {game.save();});
+	
+	var importEl = document.getElementById("import");
+	importEl.addEventListener("click", function () {game.importgame();});
+	
+	var exportEl = document.getElementById("export");
+	exportEl.addEventListener("click", function () {game.exportgame();});
 	
 	var softResetEl = document.getElementById("soft-reset");
 	softResetEl.addEventListener("click", function() {game.softreset();});
@@ -208,9 +217,11 @@ function Game() {
 	
 	this.special = undefined; //Only supports one special at a time?
 	this.tonextspecial = this.getNextSpecialTime();
+	this.totalspecials = 0; //Loadable
 	
 	this.currentclicktrack = -1;
 	this.consecutiveclicktrack = 0;
+	this.maxconsecutive = 0; //Loadable
 	this.timeclicktrack = 0;
 	this.canvas = document.getElementById("clicktrack-canvas");
 	this.cheight = 400;
@@ -499,6 +510,8 @@ Game.prototype.gametick = function(game){
 	var buildEl = document.getElementById("build-space");
 	for (var i = 0; i < game.buildings.length; i++){
 		var cost = game.buildings[i].cost*Math.pow(game.buildings[i].growth, game.buildings[i].num);
+		format = game.formatlarge(cost);
+		buildEl.childNodes[i].childNodes[3].childNodes[1].innerHTML = (isNaN(format) ? format : Math.ceil(format));
 		if (game.money >= cost){
 			buildEl.childNodes[i].className = "building on";
 		} else {
@@ -709,6 +722,10 @@ Game.prototype.uitick = function(){
 	document.getElementById("prestige").innerHTML = (isNaN(format) ? format : format.toFixed(0));
 	format = this.formatlarge(this.prestigeBonus() * 100);
 	document.getElementById("prestige-bonus").innerHTML = (isNaN(format) ? format : format.toFixed(0));
+	format = this.formatlarge(this.maxconsecutive);
+	document.getElementById("consec-stat").innerHTML = (isNaN(format) ? format : format.toFixed(0));
+	format = this.formatlarge(this.totalspecials);
+	document.getElementById("special-stat").innerHTML = (isNaN(format) ? format : format.toFixed(0));
 	
 	var buildEls = document.getElementsByClassName("building");
 	var multi = this.globalMulti();
@@ -889,6 +906,9 @@ Game.prototype.clicktrackcheck = function () {
 			if (!cc.clicked[i]){
 				if (Math.abs(cc.clicks[i] - actualTime) < 0.2){
 					this.consecutiveclicktrack++;
+					if (this.consecutiveclicktrack > this.maxconsecutive){
+						this.maxconsecutive = this.consecutiveclicktrack;
+					}
 					document.getElementById("consecutive-clicks").innerHTML = this.consecutiveclicktrack;
 					cc.clicked[i] = 1;
 					found = true;
@@ -1013,6 +1033,8 @@ Game.prototype.save = function() {
 		clickmoney: this.clickmoney,
 		moneythisgame: this.moneythisgame,
 		moneyalltime: this.moneyalltime,
+		maxconsecutive: this.maxconsecutive,
+		totalspecials: this.totalspecials,
 		version: 1
 	}
 	localStorage.setItem('save', JSON.stringify(gameState));
@@ -1096,7 +1118,12 @@ Game.prototype.load = function () {
 			this.clickmoney = gameState.clickmoney;
 			this.moneythisgame = gameState.moneythisgame;
 			this.moneyalltime = gameState.moneyalltime;
-			//return true
+			if (gameState.maxconsecutive){
+				this.maxconsecutive = gameState.maxconsecutive;
+			}
+			if (gameState.totalspecials){
+				this.totalspecials = gameState.totalspecials;
+			}
 			gameState = undefined;
 			return true;
 		} else {
@@ -1105,6 +1132,14 @@ Game.prototype.load = function () {
 		}
 	}
 	return false;
+}
+
+Game.prototype.importgame = function () {
+	
+}
+
+Game.prototype.exportgame = function () {
+	
 }
 
 function Special () {
@@ -1151,7 +1186,8 @@ Special.prototype.getPosition = function () {
 	}
 }
 
-Special.prototype.clicked = function () {
+Special.prototype.clicked = function (game) {
 	this.started = true;
+	game.totalspecials++;
 	console.log(this.effect);
 }
