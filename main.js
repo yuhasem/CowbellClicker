@@ -763,6 +763,7 @@ Game.prototype.uitick = function(){
 	}
 	
 	if (this.hasUpgrade(57)){
+		document.getElementById("clicktrack-wrapper").style.display = "block";
 		var dropEl = document.getElementById("clicktrack-dropdown");
 		dropEl.innerHTML = "";
 		var optionEl = document.createElement("option");
@@ -781,6 +782,8 @@ Game.prototype.uitick = function(){
 			dropEl.appendChild(selectEl);
 		}
 		document.getElementById("consecutive-clicks").style.display = "inline";
+	} else {
+		document.getElementById("clicktrack-wrapper").style.display = "none";
 	}
 }
 
@@ -985,9 +988,11 @@ Game.prototype.hardreset = function(l) {
 		this.moneyalltime = 0;
 		this.special = undefined;
 		this.tonextspecial = this.getNextSpecialTime();
-		this.currentclicktrack = 0; //index not id
+		this.currentclicktrack = -1;
 		this.consecutiveclicktrack = 0;
 		this.timeclicktrack = 0;
+		this.maxconsecutive = 0;
+		this.totalspecials = 0;
 		this.prestige = 0;
 		this.prestigecount = 0;
 		this.lastTick = Date.now();
@@ -1002,41 +1007,7 @@ Game.prototype.prestigeonreset = function () {
 }
 
 Game.prototype.save = function() {
-	var buildSave = [];
-	for (var i = 0; i < this.buildings.length; i++){
-		buildSave.push(this.buildings[i].num);
-	}
-	var unlockedSave = [];
-	for (var i = 0; i < this.unlockedUpgrades.length; i++){
-		unlockedSave.push(this.unlockedUpgrades[i].id);
-	}
-	var boughtSave = [];
-	for (var i = 0; i < this.boughtUpgrades.length; i++){
-		boughtSave.push(this.boughtUpgrades[i].id);
-	}
-	var achieveSave = [];
-	for (var i = 0; i < this.earnedAchievements.length; i++){
-		achieveSave.push(this.earnedAchievements[i].id);
-	}
-	var clicktrackSave = [];
-	for (var i = 0; i < this.clicktracks.length; i++){
-		clicktrackSave.push(this.clicktracks[i].unlocked);
-	}
-	var gameState = {
-		buildings: buildSave,
-		unlockedUps: unlockedSave,
-		boughtUps: boughtSave,
-		achieves: achieveSave,
-		tracks: clicktrackSave,
-		money: this.money,
-		clicks: this.clicks,
-		clickmoney: this.clickmoney,
-		moneythisgame: this.moneythisgame,
-		moneyalltime: this.moneyalltime,
-		maxconsecutive: this.maxconsecutive,
-		totalspecials: this.totalspecials,
-		version: 1
-	}
+	var gameState = this.generateSaveState();
 	localStorage.setItem('save', JSON.stringify(gameState));
 	console.log("Game saved");
 }
@@ -1087,7 +1058,7 @@ Game.prototype.load = function () {
 					return false;
 				}
 			}
-			//After that we'll unlocked/buy/earn all upgrade/achieves
+			//After that we'll unlock/buy/earn all upgrade/achieves
 			for (var i = 0; i < gameState.buildings.length; i++){
 				this.buildings[i].num = gameState.buildings[i];
 			}
@@ -1120,9 +1091,23 @@ Game.prototype.load = function () {
 			this.moneyalltime = gameState.moneyalltime;
 			if (gameState.maxconsecutive){
 				this.maxconsecutive = gameState.maxconsecutive;
+			} else {
+				this.maxconsecutive = 0;
 			}
 			if (gameState.totalspecials){
 				this.totalspecials = gameState.totalspecials;
+			} else {
+				this.totalspecials = 0;
+			}
+			if (gameState.prestige){
+				this.prestige = gameState.prestige;
+			} else {
+				this.prestige = 0;
+			}
+			if (gameState.prestigecount){
+				this.prestigecount = gameState.prestigecount;
+			} else {
+				this.prestigecount = 0;
 			}
 			gameState = undefined;
 			return true;
@@ -1134,12 +1119,97 @@ Game.prototype.load = function () {
 	return false;
 }
 
-Game.prototype.importgame = function () {
-	
+Game.prototype.importgame = function (encoded) {
+	//Store a temporary save, in case the import string is bad.
+	this.save();
+	var tempSave = localStorage.getItem('save');
+	//Need a prompt to input encoded, instead of parameter
+	if (!encoded){
+		encoded = prompt("Copy and Paste you backed up save file below.");
+		if (encoded === null){
+			return;
+		}
+	}
+	localStorage.setItem('save', window.atob(encoded));
+	//Get the game object ready for load
+	for (var i = this.unlockedUpgrades.length - 1; i >= 0; i--){
+		this.upgrades.push(this.unlockedUpgrades.splice(i,1)[0]);
+	}
+	for (var i = this.boughtUpgrades.length - 1; i >= 0; i--){
+		this.upgrades.push(this.boughtUpgrades.splice(i,1)[0]);
+	}
+	for (var i = this.earnedAchievements.length - 1; i >= 0; i--){
+		this.achievements.push(this.earnedAchievements.splice(i,1)[0]);
+	}
+	for (var i = 0; i < this.clicktracks.length; i++){
+		this.clicktracks[i].unlocked = false;
+	}
+	this.special = undefined;
+	this.tonextspecial = this.getNextSpecialTime();
+	//Attempt a load
+	if (this.load()){
+		console.log("Import was successful.");
+	} else {
+		console.log("Your import string may have been bad (e.g. not a valid game state). We're going to try to reload your old game.");
+		localStorage.setItem('save', tempSave);
+		if (this.load()){
+			console.log("Import aborted successfully.");
+		} else {
+			console.log("We were unable to load your old game. Results are undefined, we suggest hard resetting.");
+		}
+	}
 }
 
-Game.prototype.exportgame = function () {
-	
+Game.prototype.exportgame = function (hide) {
+	var gameState = this.generateSaveState();
+	var encoded = window.btoa(JSON.stringify(gameState));
+	console.log(encoded);
+	//Need a prompt to display encoded to the user
+	if (!hide){
+		prompt("Copy and Paste this text into a document and save it somewhere on your computer. You can use the Import button to bring this save back if you accidentally delete cookies or clear your browsers cache.", encoded);
+	}
+	return encoded;
+}
+
+Game.prototype.generateSaveState = function () {
+	var buildSave = [];
+	for (var i = 0; i < this.buildings.length; i++){
+		buildSave.push(this.buildings[i].num);
+	}
+	var unlockedSave = [];
+	for (var i = 0; i < this.unlockedUpgrades.length; i++){
+		unlockedSave.push(this.unlockedUpgrades[i].id);
+	}
+	var boughtSave = [];
+	for (var i = 0; i < this.boughtUpgrades.length; i++){
+		boughtSave.push(this.boughtUpgrades[i].id);
+	}
+	var achieveSave = [];
+	for (var i = 0; i < this.earnedAchievements.length; i++){
+		achieveSave.push(this.earnedAchievements[i].id);
+	}
+	var clicktrackSave = [];
+	for (var i = 0; i < this.clicktracks.length; i++){
+		clicktrackSave.push(this.clicktracks[i].unlocked);
+	}
+	var gameState = {
+		buildings: buildSave,
+		unlockedUps: unlockedSave,
+		boughtUps: boughtSave,
+		achieves: achieveSave,
+		tracks: clicktrackSave,
+		money: this.money,
+		clicks: this.clicks,
+		clickmoney: this.clickmoney,
+		moneythisgame: this.moneythisgame,
+		moneyalltime: this.moneyalltime,
+		maxconsecutive: this.maxconsecutive,
+		totalspecials: this.totalspecials,
+		prestige: this.prestige,
+		prestigecount: this.prestigecount,
+		version: 1
+	}
+	return gameState;
 }
 
 function Special () {
