@@ -41,7 +41,7 @@ body {
 	position: absolute;
 	bottom: 0;
 }
-.building, .upgrade, .achievement {
+.building, .upgrade, .achievement { /* Now how do we get this to scroll without breaking the hovers? */
 	display: inline-block;
 	border : 3px #999 solid;
 	position: relative;
@@ -113,7 +113,7 @@ div:hover > .hover {
 	font-weight: bold;
 }
 .space-words{
-	padding-top: 10px; /* WHY THE FUCK DOESN'T THIS WORK */
+	margin-top: 10px; /* WHY THE FUCK DOESN'T THIS WORK */
 }
 .flavor{
 	clear: left;
@@ -123,7 +123,26 @@ div:hover > .hover {
 #clicktrack-dropdown {
 	top: 0px;
 }
-#clicktrack-canvas {
+#notifications {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+}
+.notification {
+	position: relative;
+	border: 3px #999999 solid;
+	background-color: black;
+	width: 250px;
+	padding: 7px;
+}
+.notif-close {
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	background-color: black;
+	border: 0px;
+	color: white;
+	font-weight: bold;
 }
 
 

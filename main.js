@@ -1,6 +1,7 @@
 var game; //Outside for testing
 var largeSuffixes = ["million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion"];
 var shortSuffixes = ["M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
+var z = 0;
 
 function onload() {
 	game = new Game();
@@ -243,6 +244,7 @@ function Game() {
 		console.log("Load was unsuccessful");
 	}
 	this.tonextsave = 60000;
+	this.notifications = [];
 	
 	//Do some UI work here: Get the building costs/numbers to display the loaded values
 	
@@ -584,6 +586,18 @@ Game.prototype.gametick = function(game){
 		hover.className = "hover";
 		upEl.appendChild(hover);
 		boughtEl.appendChild(upEl);
+	}
+	
+	//Notification Updates
+	var notes = document.getElementById("notifications");
+	for (var i = 0; i < game.notifications.length; i++){
+		game.notifications[i].time -= delta;
+		if (game.notifications[i].time <= 0){
+			var toRem = document.getElementById(game.notifications[i].note);
+			notes.removeChild(toRem);
+			game.notifications.splice(i,1);
+			i--;
+		}
 	}
 	
 	if (game.tonextsave < 0){
@@ -1010,6 +1024,7 @@ Game.prototype.save = function() {
 	var gameState = this.generateSaveState();
 	localStorage.setItem('save', JSON.stringify(gameState));
 	console.log("Game saved");
+	this.addnotification("Game Saved", 3000);
 }
 
 Game.prototype.load = function () {
@@ -1212,6 +1227,36 @@ Game.prototype.generateSaveState = function () {
 	return gameState;
 }
 
+Game.prototype.addnotification = function (words, timeout) {
+	var notifEl = document.createElement('div');
+	notifEl.className = "notification";
+	notifEl.timeout = timeout;
+	var id = this.getnoteid();
+	notifEl.id = id;
+	
+	var dispEl = document.createElement('span');
+	dispEl.innerHTML = words;
+	dispEl.className = "notif-words";
+	notifEl.appendChild(dispEl);
+	
+	var closeEl = document.createElement('button');
+	closeEl.innerHTML = "x";
+	closeEl.className = "notif-close";
+	closeEl.addEventListener("click", (function (_notifEl) {
+		return function () {
+			_notifEl.timeout = 0;
+		}
+	})(notifEl));
+	notifEl.appendChild(closeEl); //CLOSE BUTTON ISN'T WORKING TODO
+	
+	document.getElementById("notifications").appendChild(notifEl);
+	this.notifications.push({note: id, time: timeout});
+}
+
+Game.prototype.getnoteid = function () {
+	return z++;
+}
+
 function Special () {
 	var choose = Math.random();
 	this.effect = "";
@@ -1260,4 +1305,5 @@ Special.prototype.clicked = function (game) {
 	this.started = true;
 	game.totalspecials++;
 	console.log(this.effect);
+	game.addnotification("You clicked the Special Cow: " + this.effect, 10000);
 }
