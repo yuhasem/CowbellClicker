@@ -1,10 +1,10 @@
-var game; //Outside for testing
+//var game; //Outside for testing
 var largeSuffixes = ["million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion"];
 var shortSuffixes = ["M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
 var z = 0;
 
 function onload() {
-	game = new Game();
+	var game = new Game();
 	
 	var build = document.getElementById("build-space");
 	build.innerHTML = "";
