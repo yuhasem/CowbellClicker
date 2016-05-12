@@ -1,0 +1,31 @@
+Cowbell Clicker:
+
+Next todos:
+
+Something akin to Golden Cookies? Need an image.(Angelic Cowbell? akin to click frenzy: ridiculously good but ridiculously rare)
+Click Tracks - stalling
+Prestige (need to test hard reset, other than that, this should be good)
+Saving
+Get the midbar to go all the way down
+In desperate need of balancing.
+Achievement popups/Notifications
+
+
+Why does it take multiple clicks to select upgrades sometimes?
+	It was the element being refreshed -> changing the event combined with holding the mouse down over the ui tick
+The game loop died while I was tabbed out?
+Production bonus seems to last a lot shorter than 60 seconds?
+	(Is the time being subtracted twice?) Nope
+	It was updateTime() setting .ended after .screenTime reached 0 regardless of .started state
+
+
+Bands with Cowbell:
+War - Low Rider
+Nazareth - Hair of the Dog
+Blue Oyster Cult - Don't Fear the Reaper
+Rolling Stones - Honkey Tonk Woman
+Run DMC - King of Rock
+
+
+http://bart.vanhauwaert.org/less/
+http://bart.vanhauwaert.org/stage/
