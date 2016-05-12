@@ -9,18 +9,35 @@
 <body onload="onload()">
 	<div class="sidebar">
 		<button id="build" class="tab">Buildings</button>
+		<button id="upgr" class="tab">Upgrades</button>
 		<button id="setting" class="tab">Settings</button>
 		<button id="stats" class="tab">Stats</button>
 		<div id="build-div" class="tab-space">
 			<div id="build-space"></div>
+			<!--
 			<span class="space-words">Upgrades:</span>
 			<div class="scrollable" id="upgrade-space"></div>
 			<span class="space-words">Upgrades Bought:</span>
 			<div class="scrollable" id="purchased-upgrades"></div>
 			<span class="space-words">Achievements:</span>
 			<div class="scrollable" id="achievements"></div>
+			-->
+		</div>
+		<div id="upgr-div" class="tab-space">
+			<span class="space-words">Upgrades:</span>
+			<div class="scrollable"><div id="upgrade-space"></div></div>
+			<span class="space-words">Upgrades Bought:</span>
+			<div class="scrollable"><div id="purchased-upgrades"></div></div>
+			<span class="space-words">Achievements:</span>
+			<div class="scrollable"><div id="achievements"></div></div>
 		</div>
 		<div id="setting-div" class="tab-space">
+			Save:
+			<p>
+				<button id="save" type="button">Save Game</button><span class="setting-descrip">Saves the Game (game saves automatically every minute)</span><br>
+				<button id="import" type="button">Import</button><br>
+				<button id="export" type="button">Export</button>
+			</p>
 			Reset:
 			<p>
 				<button id="soft-reset" type="button">Prestige</button><span class="setting-descrip">You lose all building, notes, and upgrades, but you keep click tracks and earn <span id="prestige-on-reset"></span> Prestige Points</span><br>
@@ -32,7 +49,6 @@
 			</p>
 		</div>
 		<div id="stats-div" class="tab-space">
-			Stats:
 			<p>
 				<strong>Prestige</strong>:
 				<div>Prestige: <span id="prestige"></span></div>
@@ -47,6 +63,11 @@
 				<div>Clicks: <span id="click-stat"></span> clicks</div>
 				<div>Notes from Clicks: <span id="click-money-stat"></span> notes</div>
 			</p>
+			<p>
+				<strong>Other</strong>:
+				<div>Most consecutive notes hit: <span id="consec-stat"></span></div>
+				<div>Special Cowbells Clicked: <span id="special-stat"></span></div>
+			</p>
 		</div>
 	</div>
 	<div class="midbar">
@@ -54,13 +75,18 @@
 		<div id="mps-bar"><span id="mps-el"></span> notes/sec</div>
 		<div id="mpc-bar"><span id="mpc-el"></span> notes/click</div>
 		<img src="cowbell2.png" alt="COWBELL" id="clicker" />
-		<div id="special"><img src="special.png" alt="SPECIAL" /></div>
+		<div id="special"><img src="special3.png" alt="SPECIAL" /></div>
 	</div>
 	<div class="rightbar">
-		<select id="clicktrack-dropdown">
-		</select>
-		<div class="clicktrack">
-			<canvas id="clicktrack-canvas"></canvas>
+		<div id="clicktrack-wrapper">
+			<select id="clicktrack-dropdown">
+			</select>
+			<span id="consecutive-clicks">0</span> consecutive notes hit
+			<div class="clicktrack">
+				<canvas id="clicktrack-canvas" height="400" width="200"></canvas>
+			</div>
+		</div>
+		<div id="notifications">
 		</div>
 	</div>
 </body>

@@ -1,6 +1,7 @@
 var game; //Outside for testing
 var largeSuffixes = ["million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion"];
 var shortSuffixes = ["M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
+var z = 0;
 
 function onload() {
 	game = new Game();
@@ -59,15 +60,11 @@ function onload() {
 	}
 	
 	var selector = document.getElementById("clicktrack-dropdown");
-	for (var i = 0; i < game.clicktracks.length; i++){
-		if (game.clicktracks[i].unlocked){
-			var optionEl = document.createElement("option");
-			optionEl.value = game.clicktracks[i].value;
-			optionEl.innerHTML = game.clicktracks[i].name;
-			selector.appendChild(optionEl);
-		}
-	}
+	selector.addEventListener("change", function () {
+		game.trackchange(this.value);
+	});
 	selector.style.display = "none"; //will be set when loading/when the upgrade is bought
+	document.getElementById("consecutive-clicks").style.display = "none";
 	
 	var clicker = document.getElementById("clicker");
 	clicker.addEventListener("mousedown", function () {
@@ -76,7 +73,7 @@ function onload() {
 	
 	var specEl = document.getElementById("special");
 	specEl.addEventListener("mousedown", function () {
-		game.special.clicked();
+		game.special.clicked(game);
 		this.style.display = "none";
 	});
 	
@@ -90,6 +87,15 @@ function onload() {
 			tabspaces[i].style.display =  "none";
 		}
 	}
+	
+	var saveEl = document.getElementById("save");
+	saveEl.addEventListener("click", function () {game.save();});
+	
+	var importEl = document.getElementById("import");
+	importEl.addEventListener("click", function () {game.importgame();});
+	
+	var exportEl = document.getElementById("export");
+	exportEl.addEventListener("click", function () {game.exportgame();});
 	
 	var softResetEl = document.getElementById("soft-reset");
 	softResetEl.addEventListener("click", function() {game.softreset();});
@@ -113,7 +119,7 @@ function Game() {
 		{name: "Band", description: "A band to help bang the cowbell!", num: 0, cost: 150, growth: 1.15, mps: 2},
 		{name: "Synthesizer", description: "Digitally construct more cowbell!", num: 0, cost: 1000, growth: 1.15, mps: 6},
 		{name: "Mine", description: "Mine materials for more cowbells!", num: 0, cost: 40000, growth: 1.15, mps: 35},
-		{name: "Virtual Reality", description: "Create new world to fill with cowbell!", num: 0, cost: 240000, growth: 1.15, mps: 75},
+		{name: "Virtual Reality", description: "Create new worlds to fill with cowbell!", num: 0, cost: 240000, growth: 1.15, mps: 75},
 		{name: "Solar Panels", description: "Turn the sun's energy in to more cowbell!", num: 0, cost: 2000000, growth: 1.15, mps: 500},
 		{name: "Amplifier", description: "Amplify old cowbells to faint to hear!", num: 0, cost: 36000000, growth: 1.15, mps: 3000},
 		{name: "Magician", description: "Use magic to create more cowbell!", num: 0, cost: 1000000000, growth: 1.15, mps: 25000}
@@ -179,26 +185,31 @@ function Game() {
 		{id: 54, disp: 54, cost: 100000000000000000, name: "100 Magicians", description: "Double you know the drill", builds: [0,0,0,0,0,0,0,100], upgrades: [53]},
 		{id: 55, disp: 55, cost: 190000000000000000000, name: "150 Magicians", description: "Ridiculous", builds: [0,0,0,0,0,0,0,150], upgrades: [54]},
 		{id: 56, disp: 56, cost: 250000000000000000000000, name: "200 Magicians", description: "Another One", builds: [0,0,0,0,0,0,0,200], upgrades: [55]},
-		{id: 57, disp: 100, cost: 10000000, name: "Click Track (TODO)", description: "Unlocks the clicktrack, with a basic track", builds:[50,10,10,0,0,0,0,0], clicks:[1000,100000]},
-		{id: 58, disp: 101, cost: 50000000, name: "New Track (TODO)", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[1000,200000], upgrades:[57], flavor: "A machine could drum this pretty easy"},
-		{id: 59, disp: 102, cost: 500000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[1000,2000000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal..."},
-		{id: 60, disp: 103, cost: 5000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[1000,20000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert"}
+		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[100,1000], upFunction: function(game) {game.clicktracks[0].unlocked = true;}},
+		{id: 58, disp: 101, cost: 10000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[500,100000], upgrades:[57], flavor: "A machine could drum this pretty easy", upFunction: function(game) {game.clicktracks[1].unlocked = true;}},
+		{id: 59, disp: 102, cost: 100000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[500,200000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...", upFunction: function(game) {game.clicktracks[2].unlocked = true;}},
+		{id: 60, disp: 103, cost: 1000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[500,2000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert", upFunction: function(game) {game.clicktracks[3].unlocked = true;}},
+		{id: 61, disp: 90, cost: 10000, name: "Manual Clicker", description: "Cowbell clicks also earn 0.5% of your notes per second", clicks:[0,1000]},
+		{id: 62, disp: 91, cost: 1000000, name: "Cowbell Expert", description: "Cowbell clicks also earn 1% of your notes per second", clicks:[0,10000]},
+		{id: 63, disp: 92, cost: 100000000, name: "Cowbell Efficiando", description: "Cowbell clicks also earn 1.5% of your notes per second", clicks: [0,100000]},
+		{id: 64, disp: 93, cost: 1000000000, name: "Cowbell God", description: "Cowbell clicks also earn 2% of your notes per second", clicks: [0,1000000], flavor:"My cowbell clangs are like thunder raining down from Mt. Olympus"}
 	];
 	this.unlockedUpgrades = [];
 	this.boughtUpgrades = [];
 	this.maxupgrades = this.upgrades.length;
 	
 	this.achievements = [
-		{id: 1, disp: 1, name: "Clicker", description: "Click 10 times", clicks: [10,0]},
-		{id: 2, disp: 2, name: "Click Earner", description: "Gain 100 notes from clicking", clicks: [0,100]}
+		{id: 1, disp: 1, name: "Clicker", description: "Click 100 notes from clicking", clicks: [0,100]},
+		{id: 2, disp: 2, name: "Click Earner", description: "Gain 1000 notes from clicking", clicks: [0,1000]},
+		{id: 3, disp: 3, name: "Click Entrepreneur", description: "Gain 10000 notes from clicking", clicks: [0,10000]}
 	];
 	this.earnedAchievements = [];
 	this.maxachievements = this.achievements.length;
 	//upgrades and achievements affected by load
 	
 	this.clicktracks = [
-		{id: 1, value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
-		{id: 2, value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,8.5,10,11,11.75,12,13,14,14.75,15], length: 16, clicked: []}//Animusic - Drum Machine
+		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
+		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,9,11,12,12.75,13,14,15,16,16.75,17], length: 18, clicked: []}//Animusic - Drum Machine
 		//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
 		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
 	];
@@ -212,10 +223,15 @@ function Game() {
 	
 	this.special = undefined; //Only supports one special at a time?
 	this.tonextspecial = this.getNextSpecialTime();
+	this.totalspecials = 0; //Loadable
 	
-	this.currentclicktrack = 0; //index not id
+	this.currentclicktrack = -1;
 	this.consecutiveclicktrack = 0;
+	this.maxconsecutive = 0; //Loadable
 	this.timeclicktrack = 0;
+	this.canvas = document.getElementById("clicktrack-canvas");
+	this.cheight = 400;
+	this.cwidth = 200;
 	
 	this.prestige = 0; //Loadable
 	this.prestigecount = 0; //Loadable
@@ -233,6 +249,9 @@ function Game() {
 		console.log("Load was unsuccessful");
 	}
 	this.tonextsave = 60000;
+	this.notifications = [];
+	
+	//Do some UI work here: Get the building costs/numbers to display the loaded values
 	
 	this.timeoutPointer;
 }
@@ -272,6 +291,9 @@ Game.prototype.upgrade = function (i) {
 	if (this.money >= toUpgrade.cost){
 		this.boughtUpgrades.push(this.unlockedUpgrades.splice(j, 1)[0]);
 		this.money -= toUpgrade.cost;
+		if (toUpgrade.upFunction){
+			toUpgrade.upFunction(this);
+		}
 		return true;
 	} else {
 		return false;
@@ -385,7 +407,7 @@ Game.prototype.globalMulti = function () {
 	var ret = 1;
 	if (this.special && this.special.started && !this.special.ended){
 		if (this.special.effect === "production"){
-			ret *= 3;
+			ret *= 5;
 		}
 	}
 	ret *= (1 + this.prestigeBonus());
@@ -398,9 +420,22 @@ Game.prototype.prestigeBonus = function () {
 
 Game.prototype.moneyPerClick = function () {
 	var ret = 1;
+	if (this.currentclicktrack == 0){
+		ret += this.consecutiveclicktrack;
+	}
+	if (this.currentclicktrack == 1){
+		ret += this.consecutiveclicktrack * (this.consecutiveclicktrack + 1) / 2;
+	}
+	if (this.currentclicktrack > 1){
+		ret *= Math.pow(1.1, this.consecutiveclicktrack);
+	}
+	ret += this.hasUpgrade(61) ? this.mps*0.005 : 0;
+	ret += this.hasUpgrade(62) ? this.mps*0.01 : 0;
+	ret += this.hasUpgrade(63) ? this.mps*0.015 : 0;
+	ret += this.hasUpgrade(64) ? this.mps*0.02 : 0;
 	if (this.special && this.special.started && !this.special.ended){
 		if (this.special.effect == "click"){
-			ret += this.mps*0.15;
+			ret *= 20;
 		}
 	}
 	return ret;
@@ -465,6 +500,9 @@ Game.prototype.gametick = function(game){
 		}
 	}
 	
+	//clear the canvas here
+	var ctx = game.canvas.getContext("2d");
+	ctx.clearRect(0,0,game.cwidth,game.cheight);
 	game.clicktracktick(delta);
 	
 	var monEl = document.getElementById("money-el");
@@ -483,6 +521,8 @@ Game.prototype.gametick = function(game){
 	var buildEl = document.getElementById("build-space");
 	for (var i = 0; i < game.buildings.length; i++){
 		var cost = game.buildings[i].cost*Math.pow(game.buildings[i].growth, game.buildings[i].num);
+		format = game.formatlarge(cost);
+		buildEl.childNodes[i].childNodes[3].childNodes[1].innerHTML = (isNaN(format) ? format : Math.ceil(format));
 		if (game.money >= cost){
 			buildEl.childNodes[i].className = "building on";
 		} else {
@@ -555,6 +595,22 @@ Game.prototype.gametick = function(game){
 		hover.className = "hover";
 		upEl.appendChild(hover);
 		boughtEl.appendChild(upEl);
+	}
+	
+	//Notification Updates
+	var notes = document.getElementById("notifications");
+	for (var i = 0; i < game.notifications.length; i++){
+		game.notifications[i].time -= delta;
+		if (game.notifications[i].time <= 0){
+			var toRem = document.getElementById(game.notifications[i].note);
+			if (!toRem){
+				//The notification has already been removed, go to the next one.
+				continue;
+			}
+			notes.removeChild(toRem);
+			game.notifications.splice(i,1);
+			i--;
+		}
 	}
 	
 	if (game.tonextsave < 0){
@@ -669,6 +725,7 @@ Game.prototype.uitick = function(){
 		if (!canUnlock){
 			continue;
 		}
+		this.addnotification("You earned a new achievement: " + this.achievements[i].name + "!", 10000);
 		this.earnedAchievements.push(this.achievements.splice(i, 1)[0]);
 		i--;
 	}
@@ -693,6 +750,10 @@ Game.prototype.uitick = function(){
 	document.getElementById("prestige").innerHTML = (isNaN(format) ? format : format.toFixed(0));
 	format = this.formatlarge(this.prestigeBonus() * 100);
 	document.getElementById("prestige-bonus").innerHTML = (isNaN(format) ? format : format.toFixed(0));
+	format = this.formatlarge(this.maxconsecutive);
+	document.getElementById("consec-stat").innerHTML = (isNaN(format) ? format : format.toFixed(0));
+	format = this.formatlarge(this.totalspecials);
+	document.getElementById("special-stat").innerHTML = (isNaN(format) ? format : format.toFixed(0));
 	
 	var buildEls = document.getElementsByClassName("building");
 	var multi = this.globalMulti();
@@ -728,6 +789,44 @@ Game.prototype.uitick = function(){
 		achEl.appendChild(hover);
 		achieveEl.appendChild(achEl);
 	}
+	
+	if (this.hasUpgrade(57)){
+		document.getElementById("clicktrack-wrapper").style.display = "block";
+		var dropEl = document.getElementById("clicktrack-dropdown");
+		dropEl.innerHTML = "";
+		var optionEl = document.createElement("option");
+		optionEl.innerHTML = "None";
+		optionEl.value = "none";
+		dropEl.appendChild(optionEl);
+		var selectEl = document.createElement("option");
+		selectEl.innerHTML = "Basic Clicktrack";
+		selectEl.value = "base";
+		dropEl.appendChild(selectEl);
+		dropEl.style.display = "inline";
+		if (this.hasUpgrade(58)){
+			selectEl = document.createElement("option");
+			selectEl.innerHTML = "Drum Machine";
+			selectEl.value = "drummachine";
+			dropEl.appendChild(selectEl);
+		}
+		document.getElementById("consecutive-clicks").style.display = "inline";
+	} else {
+		document.getElementById("clicktrack-wrapper").style.display = "none";
+	}
+}
+
+Game.prototype.trackchange = function (value) {
+	for (var i = 0; i < this.clicktracks.length; i++){
+		if (this.clicktracks[i].value == value){
+			this.currentclicktrack = i;
+			this.timeclicktrack = -4;
+			this.consecutiveclicktrack = 0;
+			return;
+		}
+	}
+	this.currentclicktrack = -1;
+	this.timeclicktrack = 0;
+	this.consecutiveclicktrack = 0;
 }
 
 Game.prototype.tabswitch = function () {
@@ -773,7 +872,13 @@ Game.prototype.clicktracktick = function(delta){
 	if (this.clicktracks[this.currentclicktrack]){
 		var cc = this.clicktracks[this.currentclicktrack];
 		this.timeclicktrack += (cc.bpm * delta / 60000);
+		var lastnote = 0;
+		var lastindex = -1;
 		for (var i = 0; i < cc.clicks.length; i++){
+			if (cc.clicks[i] < this.timeclicktrack){
+				lastnote = cc.clicks[i];
+				lastindex = i;
+			}
 			if (this.timeclicktrack - cc.clicks[i] > 2){
 				cc.clicked[i] = 0;
 			} else if (cc.clicks[i] - this.timeclicktrack > 2){
@@ -781,22 +886,43 @@ Game.prototype.clicktracktick = function(delta){
 				break;
 			}
 		}
+		if (Math.abs(this.timeclicktrack - lastnote) > 0.2){
+			if (lastindex > -1){
+				if (!cc.clicked[lastindex]){
+					this.consecutiveclicktrack = 0;
+					document.getElementById("consecutive-clicks").innerHTML = "0";
+				}
+			}
+		}
 		if (this.timeclicktrack > cc.length){
 			this.timeclicktrack -= this.timeclicktrack;
 		}
 		//console.log(this.timeclicktrack);
-		//Here's where we draw on the canvas the next 6 beats of the click track
+		//Here's where we draw on the canvas the next 5 beats of the click track (at least 4 beats visible)
+		var ctx = this.canvas.getContext("2d");
+		ctx.strokeStyle = "#999999";
+		ctx.moveTo(0,this.cheight*0.9);
+		ctx.lineTo(this.cwidth,this.cheight*0.9);
+		ctx.stroke();
+		ctx.storkeStyle = "#FFFFFF";
+		var x = this.cwidth/2;
 		var found = false;
-		//for (var i = 0; i < cc.clicks.length; i++){
-		//	if (Math.abs(this.timeclicktrack - cc.clicks[i]) < 0.2){
-		//		document.getElementById("placehold").style.display = "block";
-		//		found = true;
-		//		break;
-		//	}
-		//}
-		//if (!found){
-		//	document.getElementById("placehold").style.display = "none";
-		//}
+		for (var i = 0; i < cc.clicks.length; i++){
+			if (cc.clicks[i] - this.timeclicktrack < 6 && cc.clicks[i] - this.timeclicktrack >= 0){
+				var dif = cc.clicks[i] - this.timeclicktrack;
+				var y = this.cheight*(0.9 - 0.2*dif);
+				ctx.beginPath();
+				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
+				ctx.stroke();
+			}
+			if ((cc.clicks[i] + cc.length) - this.timeclicktrack < 6 && (cc.clicks[i] + cc.length) - this.timeclicktrack >= 0){
+				var dif = (cc.clicks[i] + cc.length) - this.timeclicktrack;
+				var y = this.cheight*(0.9 - 0.2*dif);
+				ctx.beginPath();
+				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
+				ctx.stroke();
+			}
+		}
 	}
 }
 
@@ -811,6 +937,10 @@ Game.prototype.clicktrackcheck = function () {
 			if (!cc.clicked[i]){
 				if (Math.abs(cc.clicks[i] - actualTime) < 0.2){
 					this.consecutiveclicktrack++;
+					if (this.consecutiveclicktrack > this.maxconsecutive){
+						this.maxconsecutive = this.consecutiveclicktrack;
+					}
+					document.getElementById("consecutive-clicks").innerHTML = this.consecutiveclicktrack;
 					cc.clicked[i] = 1;
 					found = true;
 					break;
@@ -818,10 +948,8 @@ Game.prototype.clicktrackcheck = function () {
 			}
 		}
 		if (!found){
-			this.consecutiveclicktrack = 0; //This only happens when clicked, not when a note passes and isn't clicked
+			this.consecutiveclicktrack = 0;
 		}
-		console.log(this.consecutiveclicktrack)
-		//console.log(cc.clicked);
 	}
 	
 }
@@ -888,9 +1016,11 @@ Game.prototype.hardreset = function(l) {
 		this.moneyalltime = 0;
 		this.special = undefined;
 		this.tonextspecial = this.getNextSpecialTime();
-		this.currentclicktrack = 0; //index not id
+		this.currentclicktrack = -1;
 		this.consecutiveclicktrack = 0;
 		this.timeclicktrack = 0;
+		this.maxconsecutive = 0;
+		this.totalspecials = 0;
 		this.prestige = 0;
 		this.prestigecount = 0;
 		this.lastTick = Date.now();
@@ -905,41 +1035,9 @@ Game.prototype.prestigeonreset = function () {
 }
 
 Game.prototype.save = function() {
-	var buildSave = [];
-	for (var i = 0; i < this.buildings.length; i++){
-		buildSave.push(this.buildings[i].num);
-	}
-	var unlockedSave = [];
-	for (var i = 0; i < this.unlockedUpgrades.length; i++){
-		unlockedSave.push(this.unlockedUpgrades[i].id);
-	}
-	var boughtSave = [];
-	for (var i = 0; i < this.boughtUpgrades.length; i++){
-		boughtSave.push(this.boughtUpgrades[i].id);
-	}
-	var achieveSave = [];
-	for (var i = 0; i < this.earnedAchievements.length; i++){
-		achieveSave.push(this.earnedAchievements[i].id);
-	}
-	var clicktrackSave = [];
-	for (var i = 0; i < this.clicktracks.length; i++){
-		clicktrackSave.push(this.clicktracks[i].unlocked);
-	}
-	var gameState = {
-		buildings: buildSave,
-		unlockedUps: unlockedSave,
-		boughtUps: boughtSave,
-		achieves: achieveSave,
-		tracks: clicktrackSave,
-		money: this.money,
-		clicks: this.clicks,
-		clickmoney: this.clickmoney,
-		moneythisgame: this.moneythisgame,
-		moneyalltime: this.moneyalltime,
-		version: 1
-	}
+	var gameState = this.generateSaveState();
 	localStorage.setItem('save', JSON.stringify(gameState));
-	console.log("Game saved");
+	this.addnotification("Game Saved", 3000);
 }
 
 Game.prototype.load = function () {
@@ -988,7 +1086,7 @@ Game.prototype.load = function () {
 					return false;
 				}
 			}
-			//After that we'll unlocked/buy/earn all upgrade/achieves
+			//After that we'll unlock/buy/earn all upgrade/achieves
 			for (var i = 0; i < gameState.buildings.length; i++){
 				this.buildings[i].num = gameState.buildings[i];
 			}
@@ -1019,7 +1117,26 @@ Game.prototype.load = function () {
 			this.clickmoney = gameState.clickmoney;
 			this.moneythisgame = gameState.moneythisgame;
 			this.moneyalltime = gameState.moneyalltime;
-			//return true
+			if (gameState.maxconsecutive){
+				this.maxconsecutive = gameState.maxconsecutive;
+			} else {
+				this.maxconsecutive = 0;
+			}
+			if (gameState.totalspecials){
+				this.totalspecials = gameState.totalspecials;
+			} else {
+				this.totalspecials = 0;
+			}
+			if (gameState.prestige){
+				this.prestige = gameState.prestige;
+			} else {
+				this.prestige = 0;
+			}
+			if (gameState.prestigecount){
+				this.prestigecount = gameState.prestigecount;
+			} else {
+				this.prestigecount = 0;
+			}
 			gameState = undefined;
 			return true;
 		} else {
@@ -1030,16 +1147,139 @@ Game.prototype.load = function () {
 	return false;
 }
 
+Game.prototype.importgame = function (encoded) {
+	//Store a temporary save, in case the import string is bad.
+	this.save();
+	var tempSave = localStorage.getItem('save');
+	//Need a prompt to input encoded, instead of parameter
+	if (!encoded){
+		encoded = prompt("Copy and Paste you backed up save file below.");
+		if (encoded === null){
+			return;
+		}
+	}
+	localStorage.setItem('save', window.atob(encoded));
+	//Get the game object ready for load
+	for (var i = this.unlockedUpgrades.length - 1; i >= 0; i--){
+		this.upgrades.push(this.unlockedUpgrades.splice(i,1)[0]);
+	}
+	for (var i = this.boughtUpgrades.length - 1; i >= 0; i--){
+		this.upgrades.push(this.boughtUpgrades.splice(i,1)[0]);
+	}
+	for (var i = this.earnedAchievements.length - 1; i >= 0; i--){
+		this.achievements.push(this.earnedAchievements.splice(i,1)[0]);
+	}
+	for (var i = 0; i < this.clicktracks.length; i++){
+		this.clicktracks[i].unlocked = false;
+	}
+	this.special = undefined;
+	this.tonextspecial = this.getNextSpecialTime();
+	//Attempt a load
+	if (this.load()){
+		console.log("Import was successful.");
+	} else {
+		console.log("Your import string may have been bad (e.g. not a valid game state). We're going to try to reload your old game.");
+		localStorage.setItem('save', tempSave);
+		if (this.load()){
+			console.log("Import aborted successfully.");
+		} else {
+			console.log("We were unable to load your old game. Results are undefined, we suggest hard resetting.");
+		}
+	}
+}
+
+Game.prototype.exportgame = function (hide) {
+	var gameState = this.generateSaveState();
+	var encoded = window.btoa(JSON.stringify(gameState));
+	console.log(encoded);
+	//Need a prompt to display encoded to the user
+	if (!hide){
+		prompt("Copy and Paste this text into a document and save it somewhere on your computer. You can use the Import button to bring this save back if you accidentally delete cookies or clear your browsers cache.", encoded);
+	}
+	return encoded;
+}
+
+Game.prototype.generateSaveState = function () {
+	var buildSave = [];
+	for (var i = 0; i < this.buildings.length; i++){
+		buildSave.push(this.buildings[i].num);
+	}
+	var unlockedSave = [];
+	for (var i = 0; i < this.unlockedUpgrades.length; i++){
+		unlockedSave.push(this.unlockedUpgrades[i].id);
+	}
+	var boughtSave = [];
+	for (var i = 0; i < this.boughtUpgrades.length; i++){
+		boughtSave.push(this.boughtUpgrades[i].id);
+	}
+	var achieveSave = [];
+	for (var i = 0; i < this.earnedAchievements.length; i++){
+		achieveSave.push(this.earnedAchievements[i].id);
+	}
+	var clicktrackSave = [];
+	for (var i = 0; i < this.clicktracks.length; i++){
+		clicktrackSave.push(this.clicktracks[i].unlocked);
+	}
+	var gameState = {
+		buildings: buildSave,
+		unlockedUps: unlockedSave,
+		boughtUps: boughtSave,
+		achieves: achieveSave,
+		tracks: clicktrackSave,
+		money: this.money,
+		clicks: this.clicks,
+		clickmoney: this.clickmoney,
+		moneythisgame: this.moneythisgame,
+		moneyalltime: this.moneyalltime,
+		maxconsecutive: this.maxconsecutive,
+		totalspecials: this.totalspecials,
+		prestige: this.prestige,
+		prestigecount: this.prestigecount,
+		version: 1
+	}
+	return gameState;
+}
+
+Game.prototype.addnotification = function (words, timeout) {
+	var notifEl = document.createElement('div');
+	notifEl.className = "notification";
+	notifEl.timeout = timeout;
+	var id = this.getnoteid();
+	notifEl.id = id;
+	
+	var dispEl = document.createElement('span');
+	dispEl.innerHTML = words;
+	dispEl.className = "notif-words";
+	notifEl.appendChild(dispEl);
+	
+	var closeEl = document.createElement('button');
+	closeEl.innerHTML = "x";
+	closeEl.className = "notif-close";
+	closeEl.addEventListener("click", (function (_notifEl) {
+		return function () {
+			_notifEl.parentElement.removeChild(_notifEl);
+		}
+	})(notifEl));
+	notifEl.appendChild(closeEl);
+	
+	document.getElementById("notifications").appendChild(notifEl);
+	this.notifications.push({note: id, time: timeout});
+}
+
+Game.prototype.getnoteid = function () {
+	return z++;
+}
+
 function Special () {
 	var choose = Math.random();
 	this.effect = "";
 	this.maxEffectTime = 0;
 	if (choose < 0.5) {
 		this.effect = "click";
-		this.maxEffectTime = 20000;
+		this.maxEffectTime = 40000;
 	} else {
 		this.effect = "production";
-		this.maxEffectTime = 60000;
+		this.maxEffectTime = 40000;
 	}
 	this.maxScreenTime = 20000;
 	this.screenTime = 20000; //20 seconds on screen
@@ -1074,7 +1314,13 @@ Special.prototype.getPosition = function () {
 	}
 }
 
-Special.prototype.clicked = function () {
+Special.prototype.clicked = function (game) {
 	this.started = true;
+	game.totalspecials++;
 	console.log(this.effect);
+	if (this.effect === "click"){
+		game.addnotification("Special Cowbell! Clicking the cowbell is 20x effective over the next 40 seconds.", 10000);
+	} else if (this.effect === "production"){
+		game.addnotification("Special Cowbell! You earn 5x notes per second for the next 40 seconds.", 10000);
+	}
 }
