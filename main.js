@@ -185,18 +185,23 @@ function Game() {
 		{id: 54, disp: 54, cost: 100000000000000000, name: "100 Magicians", description: "Double you know the drill", builds: [0,0,0,0,0,0,0,100], upgrades: [53]},
 		{id: 55, disp: 55, cost: 190000000000000000000, name: "150 Magicians", description: "Ridiculous", builds: [0,0,0,0,0,0,0,150], upgrades: [54]},
 		{id: 56, disp: 56, cost: 250000000000000000000000, name: "200 Magicians", description: "Another One", builds: [0,0,0,0,0,0,0,200], upgrades: [55]},
-		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[1000,50000], upFunction: function(game) {game.clicktracks[0].unlocked = true;}},
-		{id: 58, disp: 101, cost: 50000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[1000,200000], upgrades:[57], flavor: "A machine could drum this pretty easy", upFunction: function(game) {game.clicktracks[1].unlocked = true;}},
-		{id: 59, disp: 102, cost: 500000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[1000,2000000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...", upFunction: function(game) {game.clicktracks[2].unlocked = true;}},
-		{id: 60, disp: 103, cost: 5000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[1000,20000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert", upFunction: function(game) {game.clicktracks[3].unlocked = true;}}
+		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[100,1000], upFunction: function(game) {game.clicktracks[0].unlocked = true;}},
+		{id: 58, disp: 101, cost: 10000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[500,100000], upgrades:[57], flavor: "A machine could drum this pretty easy", upFunction: function(game) {game.clicktracks[1].unlocked = true;}},
+		{id: 59, disp: 102, cost: 100000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[500,200000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...", upFunction: function(game) {game.clicktracks[2].unlocked = true;}},
+		{id: 60, disp: 103, cost: 1000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[500,2000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert", upFunction: function(game) {game.clicktracks[3].unlocked = true;}},
+		{id: 61, disp: 90, cost: 10000, name: "Manual Clicker", description: "Cowbell clicks also earn 0.5% of your notes per second", clicks:[0,1000]},
+		{id: 62, disp: 91, cost: 1000000, name: "Cowbell Expert", description: "Cowbell clicks also earn 1% of your notes per second", clicks:[0,10000]},
+		{id: 63, disp: 92, cost: 100000000, name: "Cowbell Efficiando", description: "Cowbell clicks also earn 1.5% of your notes per second", clicks: [0,100000]},
+		{id: 64, disp: 93, cost: 1000000000, name: "Cowbell God", description: "Cowbell clicks also earn 2% of your notes per second", clicks: [0,1000000], flavor:"My cowbell clangs are like thunder raining down from Mt. Olympus"}
 	];
 	this.unlockedUpgrades = [];
 	this.boughtUpgrades = [];
 	this.maxupgrades = this.upgrades.length;
 	
 	this.achievements = [
-		{id: 1, disp: 1, name: "Clicker", description: "Click 10 times", clicks: [10,0]},
-		{id: 2, disp: 2, name: "Click Earner", description: "Gain 100 notes from clicking", clicks: [0,100]}
+		{id: 1, disp: 1, name: "Clicker", description: "Click 100 notes from clicking", clicks: [0,100]},
+		{id: 2, disp: 2, name: "Click Earner", description: "Gain 1000 notes from clicking", clicks: [0,1000]},
+		{id: 3, disp: 3, name: "Click Entrepreneur", description: "Gain 10000 notes from clicking", clicks: [0,10000]}
 	];
 	this.earnedAchievements = [];
 	this.maxachievements = this.achievements.length;
@@ -204,7 +209,7 @@ function Game() {
 	
 	this.clicktracks = [
 		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
-		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,8.5,10,11,11.75,12,13,14,14.75,15], length: 16, clicked: []}//Animusic - Drum Machine
+		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,9,11,12,12.75,13,14,15,16,16.75,17], length: 18, clicked: []}//Animusic - Drum Machine
 		//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
 		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
 	];
@@ -402,7 +407,7 @@ Game.prototype.globalMulti = function () {
 	var ret = 1;
 	if (this.special && this.special.started && !this.special.ended){
 		if (this.special.effect === "production"){
-			ret *= 3;
+			ret *= 5;
 		}
 	}
 	ret *= (1 + this.prestigeBonus());
@@ -424,9 +429,13 @@ Game.prototype.moneyPerClick = function () {
 	if (this.currentclicktrack > 1){
 		ret *= Math.pow(1.1, this.consecutiveclicktrack);
 	}
+	ret += this.hasUpgrade(61) ? this.mps*0.005 : 0;
+	ret += this.hasUpgrade(62) ? this.mps*0.01 : 0;
+	ret += this.hasUpgrade(63) ? this.mps*0.015 : 0;
+	ret += this.hasUpgrade(64) ? this.mps*0.02 : 0;
 	if (this.special && this.special.started && !this.special.ended){
 		if (this.special.effect == "click"){
-			ret += this.mps*0.15;
+			ret *= 20;
 		}
 	}
 	return ret;
@@ -594,6 +603,10 @@ Game.prototype.gametick = function(game){
 		game.notifications[i].time -= delta;
 		if (game.notifications[i].time <= 0){
 			var toRem = document.getElementById(game.notifications[i].note);
+			if (!toRem){
+				//The notification has already been removed, go to the next one.
+				continue;
+			}
 			notes.removeChild(toRem);
 			game.notifications.splice(i,1);
 			i--;
@@ -712,6 +725,7 @@ Game.prototype.uitick = function(){
 		if (!canUnlock){
 			continue;
 		}
+		this.addnotification("You earned a new achievement: " + this.achievements[i].name + "!", 10000);
 		this.earnedAchievements.push(this.achievements.splice(i, 1)[0]);
 		i--;
 	}
@@ -1023,7 +1037,6 @@ Game.prototype.prestigeonreset = function () {
 Game.prototype.save = function() {
 	var gameState = this.generateSaveState();
 	localStorage.setItem('save', JSON.stringify(gameState));
-	console.log("Game saved");
 	this.addnotification("Game Saved", 3000);
 }
 
@@ -1244,10 +1257,10 @@ Game.prototype.addnotification = function (words, timeout) {
 	closeEl.className = "notif-close";
 	closeEl.addEventListener("click", (function (_notifEl) {
 		return function () {
-			_notifEl.timeout = 0;
+			_notifEl.parentElement.removeChild(_notifEl);
 		}
 	})(notifEl));
-	notifEl.appendChild(closeEl); //CLOSE BUTTON ISN'T WORKING TODO
+	notifEl.appendChild(closeEl);
 	
 	document.getElementById("notifications").appendChild(notifEl);
 	this.notifications.push({note: id, time: timeout});
@@ -1263,10 +1276,10 @@ function Special () {
 	this.maxEffectTime = 0;
 	if (choose < 0.5) {
 		this.effect = "click";
-		this.maxEffectTime = 20000;
+		this.maxEffectTime = 40000;
 	} else {
 		this.effect = "production";
-		this.maxEffectTime = 60000;
+		this.maxEffectTime = 40000;
 	}
 	this.maxScreenTime = 20000;
 	this.screenTime = 20000; //20 seconds on screen
@@ -1305,5 +1318,9 @@ Special.prototype.clicked = function (game) {
 	this.started = true;
 	game.totalspecials++;
 	console.log(this.effect);
-	game.addnotification("You clicked the Special Cow: " + this.effect, 10000);
+	if (this.effect === "click"){
+		game.addnotification("Special Cowbell! Clicking the cowbell is 20x effective over the next 40 seconds.", 10000);
+	} else if (this.effect === "production"){
+		game.addnotification("Special Cowbell! You earn 5x notes per second for the next 40 seconds.", 10000);
+	}
 }

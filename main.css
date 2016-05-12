@@ -17,6 +17,7 @@ body {
 	border-left: 3px #999999 solid;
 	border-right: 3px #999999 solid;
 	bottom: 0px;
+	padding-bottom: 15%;
 }
 .rightbar {
 	float: left;
@@ -41,7 +42,7 @@ body {
 	position: absolute;
 	bottom: 0;
 }
-.building, .upgrade, .achievement { /* Now how do we get this to scroll without breaking the hovers? */
+.building, .upgrade, .achievement {
 	display: inline-block;
 	border : 3px #999 solid;
 	position: relative;
@@ -135,6 +136,9 @@ div:hover > .hover {
 	width: 250px;
 	padding: 7px;
 }
+.notif-words {
+	width: 220px; /* From what I can tell, this has no effect. How dow I get the close button to stop blocking text? */
+}
 .notif-close {
 	position: absolute;
 	right: 3px;
@@ -144,7 +148,21 @@ div:hover > .hover {
 	color: white;
 	font-weight: bold;
 }
-
+button {
+	border: 2px #999999 solid;
+	background-color: #666666;
+	color: white;
+}
+/*
+.scrollable {
+	overflow-y: auto;
+	overflow-x: visible;
+	max-height: 70px;
+	direction: rtl;
+} /* It scrolls y correctly, but any overflow in x goes behind the scrollbar... I'm not actually sure there's a way to change this, but I have to try
+.scrollable > div{
+	direction: ltr;
+}*/
 
 
 
