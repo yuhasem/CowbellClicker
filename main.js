@@ -868,7 +868,6 @@ Game.prototype.getNextSpecialTime = function () {
 }
 
 Game.prototype.clicktracktick = function(delta){
-	//Lots of canvas drawing
 	if (this.clicktracks[this.currentclicktrack]){
 		var cc = this.clicktracks[this.currentclicktrack];
 		this.timeclicktrack += (cc.bpm * delta / 60000);
@@ -895,18 +894,19 @@ Game.prototype.clicktracktick = function(delta){
 			}
 		}
 		if (this.timeclicktrack > cc.length){
-			this.timeclicktrack -= this.timeclicktrack;
+			this.timeclicktrack -= cc.length;
 		}
 		//console.log(this.timeclicktrack);
 		//Here's where we draw on the canvas the next 5 beats of the click track (at least 4 beats visible)
 		var ctx = this.canvas.getContext("2d");
+		ctx.beginPath();
 		ctx.strokeStyle = "#999999";
 		ctx.moveTo(0,this.cheight*0.9);
 		ctx.lineTo(this.cwidth,this.cheight*0.9);
 		ctx.stroke();
+		ctx.closePath();
 		ctx.storkeStyle = "#FFFFFF";
 		var x = this.cwidth/2;
-		var found = false;
 		for (var i = 0; i < cc.clicks.length; i++){
 			if (cc.clicks[i] - this.timeclicktrack < 6 && cc.clicks[i] - this.timeclicktrack >= 0){
 				var dif = cc.clicks[i] - this.timeclicktrack;
@@ -914,13 +914,15 @@ Game.prototype.clicktracktick = function(delta){
 				ctx.beginPath();
 				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
 				ctx.stroke();
+				ctx.closePath();
 			}
-			if ((cc.clicks[i] + cc.length) - this.timeclicktrack < 6 && (cc.clicks[i] + cc.length) - this.timeclicktrack >= 0){
+			if ((cc.clicks[i] + cc.length) - this.timeclicktrack < 6){
 				var dif = (cc.clicks[i] + cc.length) - this.timeclicktrack;
 				var y = this.cheight*(0.9 - 0.2*dif);
 				ctx.beginPath();
 				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
 				ctx.stroke();
+				ctx.closePath();
 			}
 		}
 	}
