@@ -137,12 +137,13 @@ div:hover > .hover {
 	padding: 7px;
 }
 .notif-words {
-	width: 220px; /* From what I can tell, this has no effect. How dow I get the close button to stop blocking text? */
+	display: inline-block;
+	width: 220px;
 }
 .notif-close {
-	position: absolute;
-	right: 3px;
-	top: 3px;
+	display: inline-block;
+	float: right;
+	top: 0%;
 	background-color: black;
 	border: 0px;
 	color: white;
