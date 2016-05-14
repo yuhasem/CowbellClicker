@@ -185,10 +185,10 @@ function Game() {
 		{id: 54, disp: 54, cost: 100000000000000000, name: "100 Magicians", description: "Double you know the drill", builds: [0,0,0,0,0,0,0,100], upgrades: [53]},
 		{id: 55, disp: 55, cost: 190000000000000000000, name: "150 Magicians", description: "Ridiculous", builds: [0,0,0,0,0,0,0,150], upgrades: [54]},
 		{id: 56, disp: 56, cost: 250000000000000000000000, name: "200 Magicians", description: "Another One", builds: [0,0,0,0,0,0,0,200], upgrades: [55]},
-		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[100,1000], upFunction: function(game) {game.clicktracks[0].unlocked = true;}},
-		{id: 58, disp: 101, cost: 10000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[500,100000], upgrades:[57], flavor: "A machine could drum this pretty easy", upFunction: function(game) {game.clicktracks[1].unlocked = true;}},
-		{id: 59, disp: 102, cost: 100000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[500,200000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...", upFunction: function(game) {game.clicktracks[2].unlocked = true;}},
-		{id: 60, disp: 103, cost: 1000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[500,2000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert", upFunction: function(game) {game.clicktracks[3].unlocked = true;}},
+		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[100,1000], upFunction: function(game) {game.clicktracks[0].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[0].name; selectEl.value = game.clicktracks[0].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
+		{id: 58, disp: 101, cost: 10000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[500,100000], upgrades:[57], flavor: "A machine could drum this pretty easy", upFunction: function(game) {game.clicktracks[1].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[1].name; selectEl.value = game.clicktracks[1].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
+		{id: 59, disp: 102, cost: 100000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[500,200000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...", upFunction: function(game) {game.clicktracks[2].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[2].name; selectEl.value = game.clicktracks[2].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
+		{id: 60, disp: 103, cost: 1000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[500,2000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert", upFunction: function(game) {game.clicktracks[3].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[3].name; selectEl.value = game.clicktracks[3].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
 		{id: 61, disp: 90, cost: 10000, name: "Manual Clicker", description: "Cowbell clicks also earn 0.5% of your notes per second", clicks:[0,1000]},
 		{id: 62, disp: 91, cost: 1000000, name: "Cowbell Expert", description: "Cowbell clicks also earn 1% of your notes per second", clicks:[0,10000]},
 		{id: 63, disp: 92, cost: 100000000, name: "Cowbell Efficiando", description: "Cowbell clicks also earn 1.5% of your notes per second", clicks: [0,100000]},
@@ -792,24 +792,9 @@ Game.prototype.uitick = function(){
 	
 	if (this.hasUpgrade(57)){
 		document.getElementById("clicktrack-wrapper").style.display = "block";
-		var dropEl = document.getElementById("clicktrack-dropdown");
-		dropEl.innerHTML = "";
-		var optionEl = document.createElement("option");
-		optionEl.innerHTML = "None";
-		optionEl.value = "none";
-		dropEl.appendChild(optionEl);
-		var selectEl = document.createElement("option");
-		selectEl.innerHTML = "Basic Clicktrack";
-		selectEl.value = "base";
-		dropEl.appendChild(selectEl);
-		dropEl.style.display = "inline";
-		if (this.hasUpgrade(58)){
-			selectEl = document.createElement("option");
-			selectEl.innerHTML = "Drum Machine";
-			selectEl.value = "drummachine";
-			dropEl.appendChild(selectEl);
-		}
+		document.getElementById("clicktrack-dropdown").style.display = "inline";
 		document.getElementById("consecutive-clicks").style.display = "inline";
+		document.getElementById("clicktrack-canvas").style.display = "block";
 	} else {
 		document.getElementById("clicktrack-wrapper").style.display = "none";
 	}
@@ -1102,6 +1087,30 @@ Game.prototype.load = function () {
 			for (var i = 0; i < gameState.boughtUps.length; i++){
 				for (var j = this.upgrades.length - 1; j >= 0; j--){
 					if (this.upgrades[j].id == gameState.boughtUps[i]){
+						if (this.upgrades[j].id == 57){
+							var selectEl = document.createElement("option");
+							selectEl.innerHTML = this.clicktracks[0].name; 
+							selectEl.value = this.clicktracks[0].value; 
+							document.getElementById("clicktrack-dropdown").appendChild(selectEl);
+						}
+						if (this.upgrades[j].id == 58){
+							var selectEl = document.createElement("option");
+							selectEl.innerHTML = this.clicktracks[1].name; 
+							selectEl.value = this.clicktracks[1].value; 
+							document.getElementById("clicktrack-dropdown").appendChild(selectEl);
+						}
+						if (this.upgrades[j].id == 59){
+							var selectEl = document.createElement("option");
+							selectEl.innerHTML = this.clicktracks[2].name; 
+							selectEl.value = this.clicktracks[2].value; 
+							document.getElementById("clicktrack-dropdown").appendChild(selectEl);
+						}
+						if (this.upgrades[j].id == 60){
+							var selectEl = document.createElement("option");
+							selectEl.innerHTML = this.clicktracks[3].name; 
+							selectEl.value = this.clicktracks[3].value; 
+							document.getElementById("clicktrack-dropdown").appendChild(selectEl);
+						}
 						this.boughtUpgrades.push(this.upgrades.splice(j,1)[0]);
 					}
 				}

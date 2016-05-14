@@ -163,6 +163,9 @@ button {
 .scrollable > div{
 	direction: ltr;
 }*/
+#clicktrack-wrapper {
+	display: none;
+}
 
 
 
