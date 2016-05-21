@@ -150,34 +150,34 @@ function Game() {
 		{id: 19, disp: 19, cost: 120000000000, name: "Fourier Series", description: "Doubles the notes per second from Synths", builds: [0,0,100,0,0,0,0,0], upgrades: [18], flavor: "No, it's simple! Everything is made out of sinusoids! That makes it easier to understand, right?"},
 		{id: 20, disp: 20, cost: 200000000000000, name: "Re-remix", description: "Doubles the notes per second from Synths", builds: [0,0,150,0,0,0,0,0], upgrades: [19], flavor: "As long as you're the first to copy the copy, you're still original."},
 		{id: 21, disp: 21, cost: 280000000000000000, name: "Funky Beats", description: "Doubles the notes per second from Synths", builds: [0,0,200,0,0,0,0,0], upgrades: [20], flavor: "Won't you take me to Funky Town?"},
-		{id: 22, disp: 22, cost: 100000, name: "1 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,1,0,0,0,0]},
-		{id: 23, disp: 23, cost: 2000000, name: "10 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,10,0,0,0,0], upgrades: [22]},
-		{id: 24, disp: 24, cost: 35000000, name: "25 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,25,0,0,0,0], upgrades: [23]},
-		{id: 25, disp: 25, cost: 2250000000, name: "50 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,50,0,0,0,0], upgrades: [24]},
-		{id: 26, disp: 26, cost: 4750000000000, name: "100 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,100,0,0,0,0], upgrades: [25]},
-		{id: 27, disp: 27, cost: 7700000000000000, name: "150 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,150,0,0,0,0], upgrades: [26]},
-		{id: 28, disp: 28, cost: 11000000000000000000, name: "200 Mine", description: "Doubles the notes per second from Mines", builds: [0,0,0,200,0,0,0,0], upgrades: [27]},
+		{id: 22, disp: 22, cost: 100000, name: "Work Harder, Not Smarter", description: "Doubles the notes per second from Mines", builds: [0,0,0,1,0,0,0,0]},
+		{id: 23, disp: 23, cost: 2000000, name: "Minor Miners", description: "Doubles the notes per second from Mines", builds: [0,0,0,10,0,0,0,0], upgrades: [22], flavor: "Kids these days are coming into the mining workforce with a lot of experience!"},
+		{id: 24, disp: 24, cost: 35000000, name: "Longer Hours", description: "Doubles the notes per second from Mines", builds: [0,0,0,25,0,0,0,0], upgrades: [23]},
+		{id: 25, disp: 25, cost: 2250000000, name: "Exoskeletons", description: "Doubles the notes per second from Mines", builds: [0,0,0,50,0,0,0,0], upgrades: [24]},
+		{id: 26, disp: 26, cost: 4750000000000, name: "Cyborg Miners", description: "Doubles the notes per second from Mines", builds: [0,0,0,100,0,0,0,0], upgrades: [25]},
+		{id: 27, disp: 27, cost: 7700000000000000, name: "Deeper Mines", description: "Doubles the notes per second from Mines", builds: [0,0,0,150,0,0,0,0], upgrades: [26]},
+		{id: 28, disp: 28, cost: 11000000000000000000, name: "Heat Resistant Robots", description: "Doubles the notes per second from Mines", builds: [0,0,0,200,0,0,0,0], upgrades: [27]},
 		{id: 29, disp: 29, cost: 1000000, name: "A Whole New World", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,1,0,0,0], flavor: "This is one of the few songs I reference that does not have cowbell in it."},
 		{id: 30, disp: 30, cost: 15000000, name: "Three Dimensional Technology", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,10,0,0,0], upgrades: [29], flavor: "Listen to cowbell...IN 3D!"},
-		{id: 31, disp: 31, cost: 200000000, name: "25 Virtual Reality", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,25,0,0,0], upgrades: [30]},
-		{id: 32, disp: 32, cost: 15000000000, name: "50 Virtual Reality", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,50,0,0,0], upgrades: [31]},
-		{id: 33, disp: 33, cost: 30000000000000, name: "100 Virtual Reality", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,100,0,0,0], upgrades: [32]},
+		{id: 31, disp: 31, cost: 200000000, name: "The Way of the Future", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,25,0,0,0], upgrades: [30]},
+		{id: 32, disp: 32, cost: 15000000000, name: "VR Headsets inside VR", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,50,0,0,0], upgrades: [31], flavor: "We need to go deeper."},
+		{id: 33, disp: 33, cost: 30000000000000, name: "Social Media Integration", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,100,0,0,0], upgrades: [32]},
 		{id: 34, disp: 34, cost: 50000000000000000, name: "The Matrix", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,150,0,0,0], upgrades: [33]},
 		{id: 35, disp: 35, cost: 65000000000000000000, name: "Universe Simulation", description: "Doubles the notes per second from Virtual Realities", builds: [0,0,0,0,200,0,0,0], upgrades: [34], flavor: "If you want to make the world a better place, just make a new one!"},
-		{id: 36, disp: 36, cost: 7000000, name: "1 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,1,0,0]},
-		{id: 37, disp: 37, cost: 100000000, name: "10 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,10,0,0], upgrades: [36]},
-		{id: 38, disp: 38, cost: 2000000000, name: "25 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,25,0,0], upgrades: [37]},
-		{id: 39, disp: 39, cost: 125000000000, name: "50 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,50,0,0], upgrades: [38]},
-		{id: 40, disp: 40, cost: 240000000000000, name: "100 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,100,0,0], upgrades: [39]},
-		{id: 41, disp: 41, cost: 390000000000000000, name: "150 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,150,0,0], upgrades: [40]},
-		{id: 42, disp: 42, cost: 550000000000000000000, name: "200 Solar Panels", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,200,0,0], upgrades: [41]},
+		{id: 36, disp: 36, cost: 7000000, name: "Tax Credits", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,1,0,0]},
+		{id: 37, disp: 37, cost: 100000000, name: "Improved Efficiency", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,10,0,0], upgrades: [36]},
+		{id: 38, disp: 38, cost: 2000000000, name: "Graphite Layering", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,25,0,0], upgrades: [37]},
+		{id: 39, disp: 39, cost: 125000000000, name: "Leafed Wires", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,50,0,0], upgrades: [38]},
+		{id: 40, disp: 40, cost: 240000000000000, name: "Fossil Fuel Smear Campaign", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,100,0,0], upgrades: [39]},
+		{id: 41, disp: 41, cost: 390000000000000000, name: "Hipster Craze", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,150,0,0], upgrades: [40]},
+		{id: 42, disp: 42, cost: 550000000000000000000, name: "Full Spectrum Absorption", description: "Doubles the notes per second from Solar Panels", builds: [0,0,0,0,0,200,0,0], upgrades: [41], flavor: "My Wifi!"},
 		{id: 43, disp: 43, cost: 100000000, name: "Turned Up To 11", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,1,0]},
 		{id: 44, disp: 44, cost: 1600000000, name: "Electric Cowbells", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,10,0], upgrades: [43]},
-		{id: 45, disp: 45, cost: 35000000000, name: "25 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,25,0], upgrades: [44]},
+		{id: 45, disp: 45, cost: 35000000000, name: "Earplugs for the band", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,25,0], upgrades: [44]},
 		{id: 46, disp: 46, cost: 2000000000000, name: "This One Goes Up To 12", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,50,0], upgrades: [45], flavor: "It's 1 louder."},
-		{id: 47, disp: 47, cost: 4200000000000000, name: "100 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,100,0], upgrades: [46]},
-		{id: 48, disp: 48, cost: 6666000000000000000, name: "150 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,150,0], upgrades: [47]},
-		{id: 49, disp: 49, cost: 10000000000000000000000, name: "200 Amplifiers", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,200,0], upgrades: [48]},
+		{id: 47, disp: 47, cost: 4200000000000000, name: "Principia Amplifica", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,100,0], upgrades: [46]},
+		{id: 48, disp: 48, cost: 6666000000000000000, name: "Heard from the ISS", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,150,0], upgrades: [47], flavor: "Actually we just used a grapevine to carry the sound up there."},
+		{id: 49, disp: 49, cost: 10000000000000000000000, name: "Cowbell Resurrection", description: "Doubles the notes per second from Amplifiers", builds: [0,0,0,0,0,0,200,0], upgrades: [48], flavor:"Cowbell Jesus died for you cheap wood block knock-off."},
 		{id: 50, disp: 50, cost: 10000000000, name: "Sleight of Hand", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,1]},
 		{id: 51, disp: 51, cost: 40000000000, name: "ESP", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,10], upgrades: [50]},
 		{id: 52, disp: 52, cost: 800000000000, name: "Fantasy Novel", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,25], upgrades: [51], flavor: "With vampires, or orcs, or whatever you kids are into these days."},
@@ -192,49 +192,101 @@ function Game() {
 		{id: 61, disp: 90, cost: 10000, name: "Manual Clicker", description: "Cowbell clicks also earn 0.5% of your notes per second", clicks:[0,1000]},
 		{id: 62, disp: 91, cost: 1000000, name: "Cowbell Expert", description: "Cowbell clicks also earn 1% of your notes per second", clicks:[0,10000]},
 		{id: 63, disp: 92, cost: 100000000, name: "Cowbell Efficiando", description: "Cowbell clicks also earn 1.5% of your notes per second", clicks: [0,1000000]},
-		{id: 64, disp: 93, cost: 1000000000, name: "Cowbell God", description: "Cowbell clicks also earn 2% of your notes per second", clicks: [0,100000000], flavor:"My cowbell clangs are like thunder raining down from Mt. Olympus"}
+		{id: 64, disp: 93, cost: 10000000000, name: "Cowbell God", description: "Cowbell clicks also earn 2% of your notes per second", clicks: [0,100000000], flavor:"My cowbell clangs are like thunder raining down from Mt. Olympus"}
 	];
 	this.unlockedUpgrades = [];
 	this.boughtUpgrades = [];
 	this.maxupgrades = this.upgrades.length;
 	
 	this.achievements = [
-		{id: 1, disp: 1, name: "Clicker", description: "Click 100 notes from clicking", clicks: [0,100]},
-		{id: 2, disp: 2, name: "Click Earner", description: "Gain 1000 notes from clicking", clicks: [0,1000]},
-		{id: 3, disp: 3, name: "Click Entrepreneur", description: "Gain 10000 notes from clicking", clicks: [0,10000]}
+		{id: 1, disp: 7, name: "Clicker", description: "Click 100 notes from clicking", clicks: [0,100]},
+		{id: 2, disp: 8, name: "Click Earner", description: "Gain 1000 notes from clicking", clicks: [0,1000]},
+		{id: 3, disp: 9, name: "Click Businessman", description: "Gain 10,000 notes from clicking", clicks: [0,10000]},
+		{id: 4, disp: 10, name: "Click Entrepreneur", description: "Gain 100,000 notes from clicking", clicks: [0,100000]},
+		{id: 5, disp: 11, name: "Click Tycoon", description: "Gain 1 million notes from clicking", clicks: [0,1000000]},
+		{id: 6, disp: 12, name: "Click Emperor", description: "Gain 10 million notes from clicking", clicks: [0,10000000], flavor: "King with a Plastic Scepter"},
+		{id: 7, disp: 13, name: "Click Entrepreneur", description: "Gain 100 million notes from clicking", clicks: [0,100000000]},
+		{id: 21, disp: 1, name: "Perucssion Newbie", description: "Gain 100 notes all time", money: [0,0,100]},
+		{id: 22, disp: 2, name: "Musician", description: "Gain 10,000 notes all time", money: [0,0,10000]},
+		{id: 23, disp: 3, name: "Drum Major", description: "Gain 1 million notes all time", money: [0,0,1000000]},
+		{id: 24, disp: 4, name: "Percussion Master", description: "Gain 100 million notes all time", money: [0,0,100000000]},
+		{id: 25, disp: 5, name: "Rising Talent", description: "Gain 10 billion notes all time", money: [0,0,10000000000]},
+		{id: 26, disp: 6, name: "Superstar", description: "Gain 1 trillion notes all time", money: [0,0,1000000000000]},
+		{id: 51, disp: 14, name: "10 Clickers", description: "Build 10 Clickers", builds: [10,0,0,0,0,0,0,0]},
+		{id: 52, disp: 15, name: "25 Clickers", description: "Build 25 Clickers", builds: [25,0,0,0,0,0,0,0]},
+		{id: 53, disp: 16, name: "50 Clickers", description: "Build 50 Clickers", builds: [50,0,0,0,0,0,0,0]},
+		{id: 54, disp: 17, name: "100 Clickers", description: "Build 100 Clickers", builds: [100,0,0,0,0,0,0,0]},
+		{id: 55, disp: 18, name: "200 Clickers", description: "Build 200 Clickers", builds: [200,0,0,0,0,0,0,0]},
+		{id: 61, disp: 19, name: "10 Bands", description: "Build 10 Bands", builds: [0,10,0,0,0,0,0,0]},
+		{id: 62, disp: 20, name: "25 Bands", description: "Build 25 Bands", builds: [0,25,0,0,0,0,0,0]},
+		{id: 63, disp: 21, name: "50 Bands", description: "Build 50 Bands", builds: [0,50,0,0,0,0,0,0]},
+		{id: 64, disp: 22, name: "100 Bands", description: "Build 100 Bands", builds: [0,100,0,0,0,0,0,0]},
+		{id: 65, disp: 23, name: "200 Bands", description: "Build 200 Bands", builds: [0,200,0,0,0,0,0,0]},
+		{id: 71, disp: 24, name: "10 Synthesizers", description: "Build 10 Synthesizers", builds: [0,0,10,0,0,0,0,0]},
+		{id: 72, disp: 25, name: "25 Synthesizers", description: "Build 25 Synthesizers", builds: [0,0,25,0,0,0,0,0]},
+		{id: 73, disp: 26, name: "50 Synthesizers", description: "Build 50 Synthesizers", builds: [0,0,50,0,0,0,0,0]},
+		{id: 74, disp: 27, name: "100 Synthesizers", description: "Build 100 Synthesizers", builds: [0,0,100,0,0,0,0,0]},
+		{id: 75, disp: 28, name: "200 Synthesizers", description: "Build 200 Synthesizers", builds: [0,0,200,0,0,0,0,0]},
+		{id: 81, disp: 29, name: "10 Mines", description: "Build 10 Mines", builds: [0,0,0,10,0,0,0,0]},
+		{id: 82, disp: 30, name: "25 Mines", description: "Build 25 Mines", builds: [0,0,0,25,0,0,0,0]},
+		{id: 83, disp: 31, name: "50 Mines", description: "Build 50 Mines", builds: [0,0,0,50,0,0,0,0]},
+		{id: 84, disp: 32, name: "100 Mines", description: "Build 100 Mines", builds: [0,0,0,100,0,0,0,0]},
+		{id: 85, disp: 33, name: "200 Mines", description: "Build 200 Mines", builds: [0,0,0,200,0,0,0,0]},
+		{id: 91, disp: 34, name: "10 Virtual Realities", description: "Build 10 Virtual Realities", builds: [0,0,0,0,10,0,0,0]},
+		{id: 92, disp: 35, name: "25 Virtual Realities", description: "Build 25 Virtual Realities", builds: [0,0,0,0,25,0,0,0]},
+		{id: 93, disp: 36, name: "50 Virtual Realities", description: "Build 50 Virtual Realities", builds: [0,0,0,0,50,0,0,0]},
+		{id: 94, disp: 37, name: "100 Virtual Realities", description: "Build 100 Virtual Realities", builds: [0,0,0,0,100,0,0,0]},
+		{id: 95, disp: 38, name: "200 Virtual Realities", description: "Build 200 Virtual Realities", builds: [0,0,0,0,200,0,0,0]},
+		{id: 101, disp: 39, name: "10 Solar Panels", description: "Build 10 Solar Panels", builds: [0,0,0,0,0,10,0,0]},
+		{id: 102, disp: 40, name: "25 Solar Panels", description: "Build 25 Solar Panels", builds: [0,0,0,0,0,25,0,0]},
+		{id: 103, disp: 41, name: "50 Solar Panels", description: "Build 50 Solar Panels", builds: [0,0,0,0,0,50,0,0]},
+		{id: 104, disp: 42, name: "100 Solar Panels", description: "Build 100 Solar Panels", builds: [0,0,0,0,0,100,0,0]},
+		{id: 105, disp: 43, name: "200 Solar Panels", description: "Build 200 Solar Panels", builds: [0,0,0,0,0,200,0,0]},
+		{id: 111, disp: 44, name: "10 Amplifiers", description: "Build 10 Amplifiers", builds: [0,0,0,0,0,0,10,0]},
+		{id: 112, disp: 45, name: "25 Amplifiers", description: "Build 25 Amplifiers", builds: [0,0,0,0,0,0,25,0]},
+		{id: 113, disp: 46, name: "50 Amplifiers", description: "Build 50 Amplifiers", builds: [0,0,0,0,0,0,50,0]},
+		{id: 114, disp: 47, name: "100 Amplifiers", description: "Build 100 Amplifiers", builds: [0,0,0,0,0,0,100,0]},
+		{id: 115, disp: 48, name: "200 Amplifiers", description: "Build 200 Amplifiers", builds: [0,0,0,0,0,0,200,0]},
+		{id: 121, disp: 49, name: "10 Magicians", description: "Build 10 Magicians", builds: [0,0,0,0,0,0,0,10]},
+		{id: 122, disp: 50, name: "25 Magicians", description: "Build 25 Magicians", builds: [0,0,0,0,0,0,0,25]},
+		{id: 123, disp: 51, name: "50 Magicians", description: "Build 50 Magicians", builds: [0,0,0,0,0,0,0,50]},
+		{id: 124, disp: 52, name: "100 Magicians", description: "Build 100 Magicians", builds: [0,0,0,0,0,0,0,100]},
+		{id: 125, disp: 53, name: "200 Magicians", description: "Build 200 Magicians", builds: [0,0,0,0,0,0,0,200]},
+		{id: 131, disp: 54, name: "Cowbell Hero I", description: "Hit 100 consecutive notes on the Basic Clicktrack", tracks: [0, 100]},
+		{id: 131, disp: 55, name: "Cowbell Hero II", description: "Hit 100 consecutive notes on the Intermidiate Clicktrack", tracks: [1, 100]},
+		{id: 131, disp: 56, name: "Cowbell Hero III", description: "Hit 100 consecutive notes on the Advanced Clicktrack", tracks: [2, 100], flavor: "Well you're pretty good 'ol son."},
 	];
 	this.earnedAchievements = [];
 	this.maxachievements = this.achievements.length;
-	//upgrades and achievements affected by load
 	
 	this.clicktracks = [
 		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
-		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,9,11,12,12.75,13,14,15,16,16.75,17], length: 18, clicked: []}//Animusic - Drum Machine
-		//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
+		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,9,11,12,12.75,13,14,15,16,16.75,17], length: 18, clicked: []}, //Animusic - Drum Machine
+		{value: "devilwent", name: "Advanced Clicktrack", unlocked: false, bpm: 120, clicks: [], length: 0, clicked: []}//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
 		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
 	];
 	
-	this.money = 0; //Loadable
+	this.money = 0;
 	this.mps = 0;
-	this.clicks = 0; //Loadble
-	this.clickmoney = 0; //Loadable
-	this.moneythisgame = 0; //Loadable
-	this.moneyalltime = 0; //Loadable
+	this.clicks = 0;
+	this.clickmoney = 0;
+	this.moneythisgame = 0; 
+	this.moneyalltime = 0;
 	
-	this.special = undefined; //Only supports one special at a time?
+	this.special = undefined; //Only supports one special at a time
 	this.tonextspecial = this.getNextSpecialTime();
-	this.totalspecials = 0; //Loadable
+	this.totalspecials = 0;
 	
 	this.currentclicktrack = -1;
 	this.consecutiveclicktrack = 0;
-	this.maxconsecutive = 0; //Loadable
+	this.maxconsecutive = 0;
 	this.timeclicktrack = 0;
 	this.canvas = document.getElementById("clicktrack-canvas");
 	this.cheight = 400;
 	this.cwidth = 200;
 	
-	this.prestige = 0; //Loadable
-	this.prestigecount = 0; //Loadable
+	this.prestige = 0;
+	this.prestigecount = 0;
 	
 	this.sounds = [];
 	this.muted = false;
@@ -250,9 +302,6 @@ function Game() {
 	}
 	this.tonextsave = 60000;
 	this.notifications = [];
-	
-	//Do some UI work here: Get the building costs/numbers to display the loaded values
-	
 	this.timeoutPointer;
 }
 
@@ -664,10 +713,15 @@ Game.prototype.uitick = function(){
 			if (this.money < this.upgrades[i].money[0]){
 				canUnlock = false;
 			}
-			if (this.moneythisthis < this.upgrades[i].money[1]){
+			if (this.moneythisgame < this.upgrades[i].money[1]){
 				canUnlock = false;
 			}
 			if (this.moneyalltime < this.upgrades[i].money[2]){
+				canUnlock = false;
+			}
+		}
+		if (this.achievements[i].tracks){
+			if (this.currentclicktrack != this.achievements[i].tracks[0] || this.consecutiveclicktrack < this.achievements[i].tracks[1]){
 				canUnlock = false;
 			}
 		}
@@ -715,10 +769,15 @@ Game.prototype.uitick = function(){
 			if (this.money < this.achievements[i].money[0]){
 				canUnlock = false;
 			}
-			if (this.moneythisthis < this.achievements[i].money[1]){
+			if (this.moneythisgame < this.achievements[i].money[1]){
 				canUnlock = false;
 			}
 			if (this.moneyalltime < this.achievements[i].money[2]){
+				canUnlock = false;
+			}
+		}
+		if (this.achievements[i].tracks){
+			if (this.currentclicktrack != this.achievements[i].tracks[0] || this.consecutiveclicktrack < this.achievements[i].tracks[1]){
 				canUnlock = false;
 			}
 		}
