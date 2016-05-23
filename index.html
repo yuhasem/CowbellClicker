@@ -14,9 +14,9 @@
 		<button id="stats" class="tab">Stats</button>
 		<div id="build-div" class="tab-space">
 			<div id="build-space"></div>
-			<!--
 			<span class="space-words">Upgrades:</span>
-			<div class="scrollable" id="upgrade-space"></div>
+			<div class="scroll-wrapper"><div class="scrollable"><div id="upgrade-space2"></div></div></div>
+			<!--
 			<span class="space-words">Upgrades Bought:</span>
 			<div class="scrollable" id="purchased-upgrades"></div>
 			<span class="space-words">Achievements:</span>
@@ -25,27 +25,28 @@
 		</div>
 		<div id="upgr-div" class="tab-space">
 			<span class="space-words">Upgrades:</span>
-			<div class="scrollable"><div id="upgrade-space"></div></div>
+			<div class="scroll-wrapper"><div class="scrollable"><div id="upgrade-space"></div></div></div>
 			<span class="space-words">Upgrades Bought:</span>
-			<div class="scrollable"><div id="purchased-upgrades"></div></div>
-			<span class="space-words">Achievements:</span>
-			<div class="scrollable"><div id="achievements"></div></div>
+			<div class="scroll-wrapper"><div class="scrollable"><div id="purchased-upgrades"></div></div></div>
+			<span class="space-words">Achievements (<span id="earned-achievements"></span>/<span id="max-achievements"></span>):</span>
+			<div class="scroll-wrapper"><div class="scrollable"><div id="achievements"></div></div></div>
 		</div>
 		<div id="setting-div" class="tab-space">
 			Save:
 			<p>
-				<button id="save" type="button">Save Game</button><span class="setting-descrip">Saves the Game (game saves automatically every minute)</span><br>
+				<button id="save" type="button">Save Game</button> <span class="setting-descrip">Saves the Game (game saves automatically every minute)</span><br>
 				<button id="import" type="button">Import</button><br>
 				<button id="export" type="button">Export</button>
 			</p>
 			Reset:
 			<p>
-				<button id="soft-reset" type="button">Prestige</button><span class="setting-descrip">You lose all building, notes, and upgrades, but you keep click tracks and earn <span id="prestige-on-reset"></span> Prestige Points</span><br>
-				<button id="hard-reset" type="button">Wipe Save</button><span class="setting-descrip">You lose everything.</span>
+				<button id="soft-reset" type="button">Prestige</button> <span class="setting-descrip">You lose all building, notes, and upgrades, but you keep click tracks and earn <span id="prestige-on-reset"></span> Prestige Points</span><br>
+				<button id="hard-reset" type="button">Wipe Save</button> <span class="setting-descrip">You lose everything.</span>
 			</p>
 			Settings:
 			<p>
-				<button id="mute" type="button" value="0">Mute</button><span class="setting-descrip">Mutes/Unmutes the game sounds.</span>
+				<button id="mute" type="button" value="0">Mute</button> <span class="setting-descrip">Mutes/Unmutes the game sounds.</span><br>
+				<button id="suffix" type="button" value="long">Long Words</button> <span class="setting-descrip">How numbers are shortened when they get big</span>
 			</p>
 		</div>
 		<div id="stats-div" class="tab-space">

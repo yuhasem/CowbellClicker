@@ -47,10 +47,7 @@ body {
 .building, .upgrade, .achievement {
 	display: inline-block;
 	border : 3px #999 solid;
-	position: relative;
 	margin: 2px;
-	top: 0;
-	left: 0;
 	-webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -58,17 +55,14 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
-.hover {
-	display: none;
-	font-size: 12px;
-	background-color: black;
-	color: white;
-}
 .building {
 	clear: left;
 	max-width: 275px;
 	min-width: 50%;
 	cursor: pointer;
+	position: relative;
+	top: 0;
+	left: 0;
 }
 .build-name {
 	font-size: 24px;
@@ -100,18 +94,6 @@ body {
 }
 .achievement {
 	padding: 4px;
-}
-div:hover > .hover {
-	display: block;
-	position: absolute;
-	top: -2px;
-	left: 100%;
-	background-color: black;
-	border: 3px #999999 solid;
-	padding: 5px;
-	min-width: 200px;
-	max-width: 300px;
-	z-index: 2;
 }
 .build-mps {
 	font-weight: bold;
@@ -158,16 +140,43 @@ button {
 	background-color: #666666;
 	color: white;
 }
-/*
+
+
+.hover {
+	position: absolute;
+	display: none;
+	font-size: 12px;
+	background-color: black;
+	color: white;
+	z-index: 10;
+	background-color: black;
+	border: 3px #999999 solid;
+	padding: 5px;
+	min-width: 200px;
+	max-width: 300px;
+}
+div:hover > .hover {
+	display: block;
+	top: 100%;
+	left: 18px;
+}
+.building:hover > .hover {
+	display: block;
+	top: -2px;
+	left: 100%;
+}
+.scroll-wrapper {
+	position: relative;
+}
 .scrollable {
 	overflow-y: auto;
-	overflow-x: visible;
+	overflow-x: hidden;
 	max-height: 70px;
 	direction: rtl;
-} /* It scrolls y correctly, but any overflow in x goes behind the scrollbar... I'm not actually sure there's a way to change this, but I have to try
+}
 .scrollable > div{
 	direction: ltr;
-}*/
+}
 #clicktrack-wrapper {
 	display: none;
 }

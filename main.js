@@ -108,6 +108,11 @@ function onload() {
 		game.togglemute(mute);
 	});
 	
+	var suffixEl = document.getElementById("suffix");
+	suffixEl.addEventListener("click", function () {
+		game.togglesuffix(suffixEl);
+	});
+	
 	game.uitick();
 	
 	game.timeoutPointer = setTimeout(game.gametick, 33, game);
@@ -253,14 +258,15 @@ function Game() {
 		{id: 124, disp: 52, name: "100 Magicians", description: "Build 100 Magicians", builds: [0,0,0,0,0,0,0,100]},
 		{id: 125, disp: 53, name: "200 Magicians", description: "Build 200 Magicians", builds: [0,0,0,0,0,0,0,200]},
 		{id: 131, disp: 54, name: "Cowbell Hero I", description: "Hit 100 consecutive notes on the Basic Clicktrack", tracks: [0, 100]},
-		{id: 131, disp: 55, name: "Cowbell Hero II", description: "Hit 100 consecutive notes on the Intermidiate Clicktrack", tracks: [1, 100]},
-		{id: 131, disp: 56, name: "Cowbell Hero III", description: "Hit 100 consecutive notes on the Advanced Clicktrack", tracks: [2, 100], flavor: "Well you're pretty good 'ol son."},
+		{id: 132, disp: 55, name: "Cowbell Hero II", description: "Hit 100 consecutive notes on the Intermidiate Clicktrack", tracks: [1, 100]},
+		{id: 133, disp: 56, name: "Cowbell Hero III", description: "Hit 100 consecutive notes on the Advanced Clicktrack", tracks: [2, 100], flavor: "Well you're pretty good 'ol son."},
 	];
 	this.earnedAchievements = [];
 	this.maxachievements = this.achievements.length;
+	document.getElementById("max-achievements").innerHTML = this.maxachievements;
 	
 	this.clicktracks = [
-		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4], length: 4, clicked: []}, //Generic Cowbell Song
+		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [0,1,2,3], length: 4, clicked: []}, //Generic Cowbell Song
 		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,9,11,12,12.75,13,14,15,16,16.75,17], length: 18, clicked: []}, //Animusic - Drum Machine
 		{value: "devilwent", name: "Advanced Clicktrack", unlocked: false, bpm: 120, clicks: [], length: 0, clicked: []}//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
 		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
@@ -587,7 +593,9 @@ Game.prototype.gametick = function(game){
 		return a.cost - b.cost;
 	});
 	var upgradeEl = document.getElementById('upgrade-space');
+	var upgrade2El = document.getElementById('upgrade-space2');
 	upgradeEl.innerHTML = "";
+	upgrade2El.innerHTML = "";
 	for (var i = 0; i < game.unlockedUpgrades.length; i++){
 		var upEl = document.createElement('div');
 		upEl.className = "upgrade" + (game.money > game.unlockedUpgrades[i].cost ? " on" : " off");
@@ -615,7 +623,14 @@ Game.prototype.gametick = function(game){
 		}
 		hover.className = "hover";
 		upEl.appendChild(hover);
+		up2El = upEl.cloneNode(true);
+		up2El.addEventListener("mousedown", (function (_id) {
+			return function () {
+				game.upgrade(_id);
+			}
+		})(id));
 		upgradeEl.appendChild(upEl);
+		upgrade2El.appendChild(up2El);
 	}
 	game.boughtUpgrades.sort(function (a, b){
 		return a.disp - b.disp;
@@ -720,7 +735,7 @@ Game.prototype.uitick = function(){
 				canUnlock = false;
 			}
 		}
-		if (this.achievements[i].tracks){
+		if (this.upgrades[i].tracks){
 			if (this.currentclicktrack != this.achievements[i].tracks[0] || this.consecutiveclicktrack < this.achievements[i].tracks[1]){
 				canUnlock = false;
 			}
@@ -848,6 +863,7 @@ Game.prototype.uitick = function(){
 		achEl.appendChild(hover);
 		achieveEl.appendChild(achEl);
 	}
+	document.getElementById("earned-achievements").innerHTML = this.earnedAchievements.length;
 	
 	if (this.hasUpgrade(57)){
 		document.getElementById("clicktrack-wrapper").style.display = "block";
@@ -896,8 +912,24 @@ Game.prototype.togglemute = function (mute) {
 	}
 }
 
+Game.prototype.togglesuffix = function (setting) {
+	if (setting.value === "long"){
+		this.suffix = shortSuffixes;
+		setting.value = "short";
+		setting.innerHTML = "Short Words";
+	} else if (setting.value === "short"){
+		this.suffix = undefined;
+		setting.value = "none";
+		setting.innerHTML = "None";
+	} else if (setting.value === "none") {
+		this.suffix = largeSuffixes;
+		setting.value = "long";
+		setting.innerHTML = "Long Words";
+	}
+}
+
 Game.prototype.formatlarge = function(number) {
-	if (number < 1000000){ // < 1 million -> Don't format
+	if (number < 1000000 || !this.suffix){ // < 1 million -> Don't format
 		return number;
 	}
 	var threes = Math.log(number)/Math.log(1000);
@@ -940,8 +972,7 @@ Game.prototype.clicktracktick = function(delta){
 		if (this.timeclicktrack > cc.length){
 			this.timeclicktrack -= cc.length;
 		}
-		//console.log(this.timeclicktrack);
-		//Here's where we draw on the canvas the next 5 beats of the click track (at least 4 beats visible)
+		//Here's where we draw on the canvas the next 6 beats of the click track (at least 4 beats visible)
 		var ctx = this.canvas.getContext("2d");
 		ctx.beginPath();
 		ctx.strokeStyle = "#999999";
@@ -949,7 +980,7 @@ Game.prototype.clicktracktick = function(delta){
 		ctx.lineTo(this.cwidth,this.cheight*0.9);
 		ctx.stroke();
 		ctx.closePath();
-		ctx.storkeStyle = "#FFFFFF";
+		ctx.strokeStyle = "#FFFFFF";
 		var x = this.cwidth/2;
 		for (var i = 0; i < cc.clicks.length; i++){
 			if (cc.clicks[i] - this.timeclicktrack < 6 && cc.clicks[i] - this.timeclicktrack >= 0){
@@ -968,6 +999,32 @@ Game.prototype.clicktracktick = function(delta){
 				ctx.stroke();
 				ctx.closePath();
 			}
+			if (cc.clicks[i] - this.timeclicktrack < 0 && cc.clicks[i] - this.timeclicktrack > -1){
+				var dif = cc.clicks[i] - this.timeclicktrack;
+				var y = this.cheight*(0.9 - 0.2*dif);
+				if (cc.clicked[i]){
+					ctx.strokeStyle = "#00FF00";
+				} else {
+					ctx.strokeStyle = "#FFFFFF";
+				}
+				ctx.beginPath();
+				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
+				ctx.stroke();
+				ctx.closePath();
+			} else if (this.timeclicktrack < 1 && this.timeclicktrack >= 0 && cc.clicks[i] - cc.length - this.timeclicktrack < 0 && cc.clicks[i] - cc.length - this.timeclicktrack > -1) { //One hell of an if statement
+				var dif = cc.clicks[i] - cc.length - this.timeclicktrack;
+				var y = this.cheight*(0.9 - 0.2*dif);
+				if (cc.clicked[i]){
+					ctx.strokeStyle = "#00FF00";
+				} else {
+					ctx.strokeStyle = "#FFFFFF";
+				}
+				ctx.beginPath();
+				ctx.arc(x, y, this.cwidth/10, 0, 2*Math.PI);
+				ctx.stroke();
+				ctx.closePath();
+			}
+			ctx.strokeStyle = "#FFFFFF";
 		}
 	}
 }
@@ -1012,6 +1069,15 @@ Game.prototype.softreset = function () {
 		for (var i = this.boughtUpgrades.length - 1; i >= 0; i--){
 			this.upgrades.push(this.boughtUpgrades.splice(i,1)[0]);
 		}
+		for (var i = 0; i < this.clicktracks.length; i++){
+			this.clicktracks[i].unlocked = false;
+		}
+		var clicktrackDropdown = document.getElementById("clicktrack-dropdown");
+		for (var i = 1; i < 4; i++){
+			if (clicktrackDropdown.children[1]){
+				clicktrackDropdown.removeChild(clicktrackDropdown.children[1]);
+			}
+		}
 		this.money = 0;
 		this.mps = 0;
 		this.clicks = 0;
@@ -1052,6 +1118,12 @@ Game.prototype.hardreset = function(l) {
 		}
 		for (var i = 0; i < this.clicktracks.length; i++){
 			this.clicktracks[i].unlocked = false;
+		}
+		var clicktrackDropdown = document.getElementById("clicktrack-dropdown");
+		for (var i = 1; i < 4; i++){
+			if (clicktrackDropdown.children[1]){
+				clicktrackDropdown.removeChild(clicktrackDropdown.children[1]);
+			}
 		}
 		this.money = 0;
 		this.mps = 0;
