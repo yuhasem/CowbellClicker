@@ -190,10 +190,34 @@ function Game() {
 		{id: 54, disp: 54, cost: 100000000000000000, name: "David Blane", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,100], upgrades: [53]},
 		{id: 55, disp: 55, cost: 190000000000000000000, name: "Penn and Teller", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,150], upgrades: [54]},
 		{id: 56, disp: 56, cost: 250000000000000000000000, name: "Houdini", description: "Doubles the notes per second from Magicians", builds: [0,0,0,0,0,0,0,200], upgrades: [55]},
-		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[100,1000], upFunction: function(game) {game.clicktracks[0].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[0].name; selectEl.value = game.clicktracks[0].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
-		{id: 58, disp: 101, cost: 10000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[500,100000], upgrades:[57], flavor: "A machine could drum this pretty easy", upFunction: function(game) {game.clicktracks[1].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[1].name; selectEl.value = game.clicktracks[1].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
-		{id: 59, disp: 102, cost: 100000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[500,200000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...", upFunction: function(game) {game.clicktracks[2].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[2].name; selectEl.value = game.clicktracks[2].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
-		{id: 60, disp: 103, cost: 1000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[500,2000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert", upFunction: function(game) {game.clicktracks[3].unlocked = true; var selectEl = document.createElement("option"); selectEl.innerHTML = game.clicktracks[3].name; selectEl.value = game.clicktracks[3].value; document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
+		{id: 57, disp: 100, cost: 1000000, name: "Click Track", description: "Unlocks the clicktrack to scale your click power!", builds:[50,10,10,0,0,0,0,0], clicks:[100,1000],
+			upFunction: function(game) {
+				game.clicktracks[0].unlocked = true;
+				var selectEl = document.createElement("option");
+				selectEl.innerHTML = game.clicktracks[0].name;
+				selectEl.value = game.clicktracks[0].value;
+				document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
+		{id: 58, disp: 101, cost: 10000000, name: "New Track", description: "A new song for your clicktrack", builds: [60,20,15,0,0,0,0,0], clicks:[500,100000], upgrades:[57], flavor: "A machine could drum this pretty easy",
+			upFunction: function(game) {
+				game.clicktracks[1].unlocked = true;
+				var selectEl = document.createElement("option");
+				selectEl.innerHTML = game.clicktracks[1].name;
+				selectEl.value = game.clicktracks[1].value;
+				document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
+		{id: 59, disp: 102, cost: 100000000, name: "New Track+ (TODO)", description: "A new song for your clicktrack", builds: [70,40,20,0,0,0,0,0], clicks:[500,200000], upgrades:[57], flavor: "Devil went down to Texas looking for a cow to steal...",
+			upFunction: function(game) {
+				game.clicktracks[2].unlocked = true;
+				var selectEl = document.createElement("option");
+				selectEl.innerHTML = game.clicktracks[2].name;
+				selectEl.value = game.clicktracks[2].value;
+				document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
+		{id: 60, disp: 103, cost: 1000000000, name: "New Track++ (TODO)", description: "A new song for your clicktrack", builds: [80,80,25,0,0,0,0,0], clicks:[500,2000000], upgrades:[57], flavor:"'Through the Carpal Tunnel and the Broken Mice' on Expert",
+			upFunction: function(game) {
+				game.clicktracks[3].unlocked = true;
+				var selectEl = document.createElement("option");
+				selectEl.innerHTML = game.clicktracks[3].name;
+				selectEl.value = game.clicktracks[3].value;
+				document.getElementById("clicktrack-dropdown").appendChild(selectEl);}},
 		{id: 61, disp: 90, cost: 10000, name: "Manual Clicker", description: "Cowbell clicks also earn 0.5% of your notes per second", clicks:[0,1000]},
 		{id: 62, disp: 91, cost: 1000000, name: "Cowbell Expert", description: "Cowbell clicks also earn 1% of your notes per second", clicks:[0,10000]},
 		{id: 63, disp: 92, cost: 100000000, name: "Cowbell Efficiando", description: "Cowbell clicks also earn 1.5% of your notes per second", clicks: [0,1000000]},
@@ -217,13 +241,13 @@ function Game() {
 		{id: 24, disp: 4, name: "Percussion Master", description: "Gain 100 million notes all time", money: [0,0,100000000]},
 		{id: 25, disp: 5, name: "Rising Talent", description: "Gain 10 billion notes all time", money: [0,0,10000000000]},
 		{id: 26, disp: 6, name: "Superstar", description: "Gain 1 trillion notes all time", money: [0,0,1000000000000]},
-		{id: 51, disp: 14, name: "10 Clickers", description: "Build 10 Clickers", builds: [10,0,0,0,0,0,0,0]},
-		{id: 52, disp: 15, name: "25 Clickers", description: "Build 25 Clickers", builds: [25,0,0,0,0,0,0,0]},
-		{id: 53, disp: 16, name: "50 Clickers", description: "Build 50 Clickers", builds: [50,0,0,0,0,0,0,0]},
-		{id: 54, disp: 17, name: "100 Clickers", description: "Build 100 Clickers", builds: [100,0,0,0,0,0,0,0]},
-		{id: 55, disp: 18, name: "200 Clickers", description: "Build 200 Clickers", builds: [200,0,0,0,0,0,0,0]},
-		{id: 61, disp: 19, name: "10 Bands", description: "Build 10 Bands", builds: [0,10,0,0,0,0,0,0]},
-		{id: 62, disp: 20, name: "25 Bands", description: "Build 25 Bands", builds: [0,25,0,0,0,0,0,0]},
+		{id: 51, disp: 14, name: "Click-mania", description: "Build 10 Clickers", builds: [10,0,0,0,0,0,0,0]},
+		{id: 52, disp: 15, name: "Click-aholic", description: "Build 25 Clickers", builds: [25,0,0,0,0,0,0,0]},
+		{id: 53, disp: 16, name: "Click-tacular", description: "Build 50 Clickers", builds: [50,0,0,0,0,0,0,0]},
+		{id: 54, disp: 17, name: "Click-amanjaro", description: "Build 100 Clickers", builds: [100,0,0,0,0,0,0,0]},
+		{id: 55, disp: 18, name: "Click-pocalypse", description: "Build 200 Clickers", builds: [200,0,0,0,0,0,0,0], flavor: "Likeness to other incrementals is purely coincidental."},
+		{id: 61, disp: 19, name: "Creedence Cowbell Revival", description: "Build 10 Bands", builds: [0,10,0,0,0,0,0,0], flavor: "What, were you born on a bayou?"},
+		{id: 62, disp: 20, name: "Mississippi Queen", description: "Build 25 Bands", builds: [0,25,0,0,0,0,0,0], flavor: "If you know what I mean. ( ͡° ͜ʖ ͡°)"},
 		{id: 63, disp: 21, name: "50 Bands", description: "Build 50 Bands", builds: [0,50,0,0,0,0,0,0]},
 		{id: 64, disp: 22, name: "100 Bands", description: "Build 100 Bands", builds: [0,100,0,0,0,0,0,0]},
 		{id: 65, disp: 23, name: "200 Bands", description: "Build 200 Bands", builds: [0,200,0,0,0,0,0,0]},
@@ -250,13 +274,13 @@ function Game() {
 		{id: 111, disp: 44, name: "10 Amplifiers", description: "Build 10 Amplifiers", builds: [0,0,0,0,0,0,10,0]},
 		{id: 112, disp: 45, name: "25 Amplifiers", description: "Build 25 Amplifiers", builds: [0,0,0,0,0,0,25,0]},
 		{id: 113, disp: 46, name: "50 Amplifiers", description: "Build 50 Amplifiers", builds: [0,0,0,0,0,0,50,0]},
-		{id: 114, disp: 47, name: "100 Amplifiers", description: "Build 100 Amplifiers", builds: [0,0,0,0,0,0,100,0]},
+		{id: 114, disp: 47, name: "The Cowbell Heard 'Round the World", description: "Build 100 Amplifiers", builds: [0,0,0,0,0,0,100,0]},
 		{id: 115, disp: 48, name: "200 Amplifiers", description: "Build 200 Amplifiers", builds: [0,0,0,0,0,0,200,0]},
-		{id: 121, disp: 49, name: "10 Magicians", description: "Build 10 Magicians", builds: [0,0,0,0,0,0,0,10]},
-		{id: 122, disp: 50, name: "25 Magicians", description: "Build 25 Magicians", builds: [0,0,0,0,0,0,0,25]},
-		{id: 123, disp: 51, name: "50 Magicians", description: "Build 50 Magicians", builds: [0,0,0,0,0,0,0,50]},
-		{id: 124, disp: 52, name: "100 Magicians", description: "Build 100 Magicians", builds: [0,0,0,0,0,0,0,100]},
-		{id: 125, disp: 53, name: "200 Magicians", description: "Build 200 Magicians", builds: [0,0,0,0,0,0,0,200]},
+		{id: 121, disp: 49, name: "It's Just Math", description: "Build 10 Magicians", builds: [0,0,0,0,0,0,0,10]},
+		{id: 122, disp: 50, name: "It's Just Science", description: "Build 25 Magicians", builds: [0,0,0,0,0,0,0,25]},
+		{id: 123, disp: 51, name: "It's Just Optical Illusions", description: "Build 50 Magicians", builds: [0,0,0,0,0,0,0,50]},
+		{id: 124, disp: 52, name: "It's Just Psychology", description: "Build 100 Magicians", builds: [0,0,0,0,0,0,0,100]},
+		{id: 125, disp: 53, name: "It's Just Magic", description: "Build 200 Magicians", builds: [0,0,0,0,0,0,0,200], flavor: "It's just a prank, bro!"},
 		{id: 131, disp: 54, name: "Cowbell Hero I", description: "Hit 100 consecutive notes on the Basic Clicktrack", tracks: [0, 100]},
 		{id: 132, disp: 55, name: "Cowbell Hero II", description: "Hit 100 consecutive notes on the Intermidiate Clicktrack", tracks: [1, 100]},
 		{id: 133, disp: 56, name: "Cowbell Hero III", description: "Hit 100 consecutive notes on the Advanced Clicktrack", tracks: [2, 100], flavor: "Well you're pretty good 'ol son."},
@@ -268,7 +292,18 @@ function Game() {
 	this.clicktracks = [
 		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [0,1,2,3], length: 4, clicked: []}, //Generic Cowbell Song
 		{value: "drummachine", name: "Intermediate Clicktrack", unlocked: false, bpm: 120, clicks: [1,2,3,4,5,6,7,9,11,12,12.75,13,14,15,16,16.75,17], length: 18, clicked: []}, //Animusic - Drum Machine
-		{value: "devilwent", name: "Advanced Clicktrack", unlocked: false, bpm: 120, clicks: [], length: 0, clicked: []}//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
+		{value: "devilwent", name: "Advanced Clicktrack", unlocked: false, bpm: 120, clicks: [0,1,2,2.5,3,3.25,3.5,4,5,6,6.5,7,7.25,7.5,8,9,10,10.5,11,11.25,11.5,12,13,14,14.5,15,15.25,15.5,
+		                                                                                      16,16.5,17,17.5,18,18.5,19,19.5,20,20.5,21,21.5,22,22.5,23,23.5,24,24.5,25,25.5,26,26.5,27,27.5,28,28.5,29,29.5,30,30.5,31,31.5,
+																							  32,32.25,32.5,32.75,33,33.25,33.5,33.75,34,34.25,34.5,34.75,35,35.25,35.5,36,36.25,36.5,36.75,37,37.25,37.5,37.75,38,38.25,38.5,38.75,39,39.25,39.5,40,40.25,40.5,40.75,41,41.25,41.5,41.75,42,42.25,42.5,42.75,43,43.25,43.5,44,44.25,44.5,44.75,45,45.25,45.5,45.75,46,46.25,46.5,46.75,47,47.25,47.5,
+																							  48,51,51.25,51.5,52,52.25,52.5,52.75,53.5,53.75,54,54.25,54.5,55,55.25,55.5,55.75,56,56.25,56.5,57,57.25,57.5,58,58.25,58.5,59,59.25,59.5,60,60.25,60.75,61,61.5,61.75,62,62.25,62.5,63,63.25,63.75,
+																							  64,65,66,66.5,67,68,72,72.5,73,
+																							  76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,
+																							  92,92.25,93,93.25,93.5,94,94.5,95,96,97,97.25,97.5,98,98.5,98.75,99,100,100.25,100.5,101,101.5,101.75,102,102.5,103,104,105,105.25,105.5,105.75,106,106.25,106.5,107,107.5,
+																							  108,108.25,108.5,108.75,109,109.5,110,110.25,110.5,111,112,113,113.25,113.5,113.75,114,114.25,114.5,115,115.5,116,116.25,116.5,116.75,117,117.5,118,118.5,118.75,119,120,121,121.25,121.5,122,122.25,122.5,123,123.25,123.5,
+																							  124,124.5,124.75,125,125.5,125.75,126,126.5,126.75,127,127.25,127.5,128,128.5,128.75,129,129.5,129.75,130,130.5,130.75,131,131.5,131.75,
+																							  132,132.25,132.75,133,133.25,133.75,134,134.25,134.5,135,135.25,135.75,136,136.5,136.75,137,137.5,137.75,138,138.5,138.75,139,139.25,139.5,
+																							  140,140.5,140.75,141,141.5,141.75,142,142.5,142.75,143,143.25,143.5,144,145,145.5,146,148,149,149.5,150,
+																							  152,152.5,153,153.5,154,154.5,155,155.5,156,158,158.5], length: 164, clicked: []}//Charlie Daniels Band - Devil Went down to Georgia (adaption for the cowbell)
 		//Dragonforce - Through the Fire and the Flames (adaption for the cowbell)
 	];
 	
@@ -481,13 +516,16 @@ Game.prototype.moneyPerClick = function () {
 	if (this.currentclicktrack == 1){
 		ret += this.consecutiveclicktrack * (this.consecutiveclicktrack + 1) / 2;
 	}
-	if (this.currentclicktrack > 1){
-		ret *= Math.pow(1.1, this.consecutiveclicktrack);
-	}
 	ret += this.hasUpgrade(61) ? this.mps*0.005 : 0;
 	ret += this.hasUpgrade(62) ? this.mps*0.01 : 0;
 	ret += this.hasUpgrade(63) ? this.mps*0.015 : 0;
 	ret += this.hasUpgrade(64) ? this.mps*0.02 : 0;
+	if (this.currentclicktrack == 2){
+		ret *= 1 + (0.01 * this.consecutiveclicktrack);
+	}
+	if (this.currentclicktrack > 2){
+		ret *= Math.pow(1.01, this.consecutiveclicktrack);
+	}
 	if (this.special && this.special.started && !this.special.ended){
 		if (this.special.effect == "click"){
 			ret *= 20;
@@ -1098,7 +1136,6 @@ Game.prototype.softreset = function () {
 Game.prototype.hardreset = function(l) {
 	if (l == 1){
 		if (confirm("WARNING: If you press OK here, you will lose ALL of your progress, including prestige. If you want to gain prestige, use the soft reset!")){
-			console.log("in here");
 			this.hardreset(2);
 		}
 	} else if (l > 1){

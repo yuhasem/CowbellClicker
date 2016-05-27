@@ -174,11 +174,65 @@ div:hover > .hover {
 	max-height: 70px;
 	direction: rtl;
 }
+.larger {
+	max-height: 200px;
+}
 .scrollable > div{
 	direction: ltr;
 }
 #clicktrack-wrapper {
 	display: none;
+}
+
+#m_confirm{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	max-width: 300px;
+	border: 3px #999999 solid;
+	background-color: black;
+	padding: 10px;
+	display:none;
+}
+#m_prompt_long{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	max-width: 300px;
+	border: 3px #999999 solid;
+	background-color: black;
+	padding: 10px;
+	display:none;
+}
+#m_show_long{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	max-width: 300px;
+	border: 3px #999999 solid;
+	background-color: black;
+	padding: 10px;
+	display:none;
+}
+.m_message {
+	
+}
+.m_ok {
+	border: 2px #999999 solid;
+	background-color: #666666;
+	color: white;
+	float: right;
+	margin-right: 5px;
+}
+.m_cancel {
+	border: 2px #999999 solid;
+	background-color: #666666;
+	color: white;
+	float: right;
+	margin-right: 5px;
+}
+.m_long_text_input {
+	max-width: 280px;
 }
 
 
