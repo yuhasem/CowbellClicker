@@ -992,7 +992,7 @@ Game.prototype.clicktracktick = function(delta){
 				lastnote = cc.clicks[i];
 				lastindex = i;
 			}
-			if (this.timeclicktrack - cc.clicks[i] > 2){
+			if (this.timeclicktrack - cc.clicks[i] > 2 && cc.clicks[i] + cc.length - this.timeclicktrack > 1){
 				cc.clicked[i] = 0;
 			} else if (cc.clicks[i] - this.timeclicktrack > 2){
 				cc.clicked[i] = 0;
@@ -1076,7 +1076,7 @@ Game.prototype.clicktrackcheck = function () {
 		var found = false;
 		for (var i = 0; i < cc.clicks.length; i++){
 			if (!cc.clicked[i]){
-				if (Math.abs(cc.clicks[i] - actualTime) < 0.2){
+				if (Math.abs(cc.clicks[i] - actualTime) < 0.2 || Math.abs(cc.clicks[i] + cc.length - actualTime) < 0.2){
 					this.consecutiveclicktrack++;
 					if (this.consecutiveclicktrack > this.maxconsecutive){
 						this.maxconsecutive = this.consecutiveclicktrack;
