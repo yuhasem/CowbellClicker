@@ -1,10 +1,10 @@
-//var game; //Outside for testing
+var game; //Outside for testing
 var largeSuffixes = ["million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion"];
 var shortSuffixes = ["M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
 var z = 0;
 
 function onload() {
-	var game = new Game();
+	game = new Game();
 	
 	var build = document.getElementById("build-space");
 	build.innerHTML = "";
@@ -328,10 +328,11 @@ function Game() {
 	
 	this.prestige = 0;
 	this.prestigecount = 0;
+	this.prestigepivot = 100000000;
 	
 	this.sounds = [];
 	this.muted = false;
-	this.suffix = largeSuffixes; //Will be configurable setting TODO
+	this.suffix = largeSuffixes;
 	
 	this.lastTick = Date.now();
 	this.timeSinceLastUIUpdate = 0;
@@ -1185,7 +1186,8 @@ Game.prototype.hardreset = function(l) {
 }
 
 Game.prototype.prestigeonreset = function () {
-	var total = Math.floor(Math.sqrt(this.moneyalltime / 1000000000000));
+	//var total = Math.floor(Math.sqrt(this.moneyalltime / 1000000000000));
+	var total = Math.floor((-1+Math.sqrt(1+(8*this.moneyalltime/this.prestigepivot)))/2);
 	return total - this.prestige;
 }
 
@@ -1333,7 +1335,6 @@ Game.prototype.importgame = function (encoded) {
 	//Store a temporary save, in case the import string is bad.
 	this.save();
 	var tempSave = localStorage.getItem('save');
-	//Need a prompt to input encoded, instead of parameter
 	if (!encoded){
 		encoded = prompt("Copy and Paste you backed up save file below.");
 		if (encoded === null){
@@ -1374,7 +1375,6 @@ Game.prototype.exportgame = function (hide) {
 	var gameState = this.generateSaveState();
 	var encoded = window.btoa(JSON.stringify(gameState));
 	console.log(encoded);
-	//Need a prompt to display encoded to the user
 	if (!hide){
 		prompt("Copy and Paste this text into a document and save it somewhere on your computer. You can use the Import button to bring this save back if you accidentally delete cookies or clear your browsers cache.", encoded);
 	}
