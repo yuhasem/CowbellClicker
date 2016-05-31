@@ -129,7 +129,14 @@ function Game() {
 		{name: "Amplifier", description: "Amplify old cowbells to faint to hear!", num: 0, cost: 36000000, growth: 1.15, mps: 3000},
 		{name: "Magician", description: "Use magic to create more cowbell!", num: 0, cost: 1000000000, growth: 1.15, mps: 25000}
 	];
-	//Engineers/Scientists?
+	this.engineers = {name: "Engineers", description: "Hire Engineers to help you synergize your buildings", num: 0, cost: 100000, growth: 1.1};
+	this.scientists = {name: "Scientists", description: "Hire Scientists to discover new materials ti improve some buildings", num: 0, cost: 100000, growth: 1.1};
+	//Engineers/Scientists cost notes per second instead of just notes
+	//Should we experiment with different growth rates beside exponential?
+	this.tech = [
+		{},
+		{}
+	];
 	
 	//upgrades and achievements are essentially lists of listeners which will be notfied at every game tick
 	//When unlocked/achieved, they will be removed from the original list as a deregistration from the notifier.
@@ -1126,7 +1133,7 @@ Game.prototype.softreset = function () {
 		this.special = undefined;
 		this.tonextspecial = this.getNextSpecialTime();
 		//grant prestige
-		this.prestige = Math.floor(Math.sqrt(this.moneyalltime / 1000000000000));
+		this.prestige = Math.floor((-1+Math.sqrt(1+(8*this.moneyalltime/this.prestigepivot)))/2);
 		this.prestigecount++;
 		this.lastTick = Date.now();
 		this.timeSinceLastUIUpdate = 5000;
