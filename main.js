@@ -72,9 +72,12 @@ function onload() {
 	});
 	
 	var specEl = document.getElementById("special");
-	specEl.addEventListener("mousedown", function () {
-		game.special.clicked(game);
-		this.style.display = "none";
+	specEl.addEventListener("mousedown", function (event) {
+		if (event.buttons && event.buttons === 1){
+			game.special.clicked(game);
+			this.style.display = "none";
+			return;
+		}
 	});
 	
 	var tabs = document.getElementsByClassName("tab");
@@ -656,8 +659,11 @@ Game.prototype.gametick = function(game){
 			upEl.appendChild(name);
 			var id = game.unlockedUpgrades[i].id;
 			upEl.addEventListener("mousedown", (function (_id) {
-				return function () {
-					game.upgrade(_id);
+				return function (event) {
+					if (event.buttons && event.buttons === 1){
+						game.upgrade(_id);
+						return;
+					}
 				}
 			})(id));
 			var hover = document.createElement('div');
@@ -678,8 +684,11 @@ Game.prototype.gametick = function(game){
 			upEl.id = "1uu"+game.unlockedUpgrades[i].id;
 			up2El.id = "2uu"+game.unlockedUpgrades[i].id;
 			up2El.addEventListener("mousedown", (function (_id) {
-				return function () {
-					game.upgrade(_id);
+				return function (event) {
+					if (event.buttons && event.buttons === 1){
+						game.upgrade(_id);
+						return;
+					}
 				}
 			})(id));
 			upgradeEl.appendChild(upEl);
@@ -755,7 +764,7 @@ Game.prototype.gametick = function(game){
 				hover.className = "hover";
 				upEl.appendChild(hover);
 				upEl.id = "bu"+game.boughtUpgrades[i].id;
-				boughtEl.insertBefore(upEl, boughtEl.childNodes[i+1]);
+				boughtEl.insertBefore(upEl, boughtEl.childNodes[i]);
 				game.shownboughtupgrades++;
 			}
 		}
@@ -993,7 +1002,7 @@ Game.prototype.uitick = function(){
 				hover.className = "hover";
 				achEl.appendChild(hover);
 				achEl.id = "a"+this.earnedAchievements[i].id;
-				achieveEl.insertBefore(achEl, achieveEl.childNodes[i+1]);
+				achieveEl.insertBefore(achEl, achieveEl.childNodes[i]);
 				this.shownachievements++;
 			}
 		}
