@@ -233,6 +233,8 @@ function Game() {
 	this.unlockedUpgrades = [];
 	this.boughtUpgrades = [];
 	this.maxupgrades = this.upgrades.length;
+	this.shownunlockedupgrades = 0;
+	this.shownboughtupgrades = 0;
 	
 	this.achievements = [
 		{id: 1, disp: 7, name: "Clicker", description: "Click 100 notes from clicking", clicks: [0,100]},
@@ -295,6 +297,7 @@ function Game() {
 	this.earnedAchievements = [];
 	this.maxachievements = this.achievements.length;
 	document.getElementById("max-achievements").innerHTML = this.maxachievements;
+	this.shownachievements = 0;
 	
 	this.clicktracks = [
 		{value: "base", name: "Basic Clicktrack", unlocked: false, bpm: 120, clicks: [0,1,2,3], length: 4, clicked: []}, //Generic Cowbell Song
@@ -635,76 +638,127 @@ Game.prototype.gametick = function(game){
 	}
 	
 	//Upgrade Update
-	game.unlockedUpgrades.sort(function (a, b) {
-		return a.cost - b.cost;
-	});
 	var upgradeEl = document.getElementById('upgrade-space');
 	var upgrade2El = document.getElementById('upgrade-space2');
-	upgradeEl.innerHTML = "";
-	upgrade2El.innerHTML = "";
-	for (var i = 0; i < game.unlockedUpgrades.length; i++){
-		var upEl = document.createElement('div');
-		upEl.className = "upgrade" + (game.money > game.unlockedUpgrades[i].cost ? " on" : " off");
-		var name = document.createElement('span');
-		name.innerHTML = game.unlockedUpgrades[i].name;
-		name.className = "up-name";
-		upEl.appendChild(name);
-		var id = game.unlockedUpgrades[i].id;
-		upEl.addEventListener("mousedown", (function (_id) {
-			return function () {
-				game.upgrade(_id);
+	if (game.unlockedUpgrades.length != game.shownunlockedupgrades){
+		game.unlockedUpgrades.sort(function (a, b) {
+			return a.cost - b.cost;
+		});
+		upgradeEl.innerHTML = "";
+		upgrade2El.innerHTML = "";
+		game.shownunlockedupgrades = 0;
+		for (var i = 0; i < game.unlockedUpgrades.length; i++){
+			var upEl = document.createElement('div');
+			upEl.className = "upgrade" + (game.money > game.unlockedUpgrades[i].cost ? " on" : " off");
+			var name = document.createElement('span');
+			name.innerHTML = game.unlockedUpgrades[i].name;
+			name.className = "up-name";
+			upEl.appendChild(name);
+			var id = game.unlockedUpgrades[i].id;
+			upEl.addEventListener("mousedown", (function (_id) {
+				return function () {
+					game.upgrade(_id);
+				}
+			})(id));
+			var hover = document.createElement('div');
+			format = game.formatlarge(game.unlockedUpgrades[i].cost);
+			hover.innerHTML = isNaN(format) ? format : Math.ceil(format);
+			hover.innerHTML += " notes <br/>";
+			hover.innerHTML += game.unlockedUpgrades[i].description;
+			if (game.unlockedUpgrades[i].flavor){
+				hover.innerHTML += "<br/>";
+				var flavor = document.createElement('span');
+				flavor.innerHTML = game.unlockedUpgrades[i].flavor;
+				flavor.className = "flavor";
+				hover.appendChild(flavor);
 			}
-		})(id));
-		var hover = document.createElement('div');
-		format = game.formatlarge(game.unlockedUpgrades[i].cost);
-		hover.innerHTML = isNaN(format) ? format : Math.ceil(format);
-		hover.innerHTML += " notes <br/>";
-		hover.innerHTML += game.unlockedUpgrades[i].description;
-		if (game.unlockedUpgrades[i].flavor){
-			hover.innerHTML += "<br/>";
-			var flavor = document.createElement('span');
-			flavor.innerHTML = game.unlockedUpgrades[i].flavor;
-			flavor.className = "flavor";
-			hover.appendChild(flavor);
+			hover.className = "hover";
+			upEl.appendChild(hover);
+			up2El = upEl.cloneNode(true);
+			upEl.id = "1uu"+game.unlockedUpgrades[i].id;
+			up2El.id = "2uu"+game.unlockedUpgrades[i].id;
+			up2El.addEventListener("mousedown", (function (_id) {
+				return function () {
+					game.upgrade(_id);
+				}
+			})(id));
+			upgradeEl.appendChild(upEl);
+			upgrade2El.appendChild(up2El);
+			game.shownunlockedupgrades++;
 		}
-		hover.className = "hover";
-		upEl.appendChild(hover);
-		up2El = upEl.cloneNode(true);
-		up2El.addEventListener("mousedown", (function (_id) {
-			return function () {
-				game.upgrade(_id);
-			}
-		})(id));
-		upgradeEl.appendChild(upEl);
-		upgrade2El.appendChild(up2El);
+	}
+	for (var i = 0; i < game.unlockedUpgrades.length; i++){
+		var upEl = upgradeEl.childNodes[i];
+		var up2El = upgrade2El.childNodes[i];
+		if (game.money > game.unlockedUpgrades[i].cost){
+			upEl.className = "upgrade on";
+			up2El.className = "upgrade on";
+		} else {
+			upEl.className = "upgrade off";
+			up2El.className = "upgrade off";
+		}
 	}
 	game.boughtUpgrades.sort(function (a, b){
 		return a.disp - b.disp;
 	});
 	var boughtEl = document.getElementById('purchased-upgrades');
-	boughtEl.innerHTML = "";
-	for (var i = 0; i < game.boughtUpgrades.length; i++){
-		var upEl = document.createElement('div');
-		upEl.className = "upgrade on";
-		var name = document.createElement('span');
-		name.innerHTML = game.boughtUpgrades[i].name;
-		name.className = "up-name";
-		upEl.appendChild(name);
-		var hover = document.createElement('div');
-		format = game.formatlarge(game.boughtUpgrades[i].cost);
-		hover.innerHTML = isNaN(format) ? format : Math.ceil(format);
-		hover.innerHTML += " notes <br/>";
-		hover.innerHTML += game.boughtUpgrades[i].description;
-		if (game.boughtUpgrades[i].flavor){
-			hover.innerHTML += "<br/>";
-			var flavor = document.createElement('span');
-			flavor.innerHTML = game.boughtUpgrades[i].flavor;
-			flavor.className = "flavor";
-			hover.appendChild(flavor);
+	if (game.boughtUpgrades.length < game.shownboughtupgrades){
+		 boughtEl.innerHTML = "";
+		 this.shownboughtupgrades = 0;
+		 for (var i = 0; i < game.boughtUpgrades.length; i++){
+			 var upEl = document.createElement('div');
+			 upEl.className = "upgrade on";
+			 var name = document.createElement('span');
+			 name.innerHTML = game.boughtUpgrades[i].name;
+			 name.className = "up-name";
+			 upEl.appendChild(name);
+			 var hover = document.createElement('div');
+			 format = game.formatlarge(game.boughtUpgrades[i].cost);
+			 hover.innerHTML = isNaN(format) ? format : Math.ceil(format);
+			 hover.innerHTML += " notes <br/>";
+			 hover.innerHTML += game.boughtUpgrades[i].description;
+			 if (game.boughtUpgrades[i].flavor){
+				 hover.innerHTML += "<br/>";
+				 var flavor = document.createElement('span');
+				 flavor.innerHTML = game.boughtUpgrades[i].flavor;
+				 flavor.className = "flavor";
+				 hover.appendChild(flavor);
+			 }
+			 hover.className = "hover";
+			 upEl.appendChild(hover);
+			 upEl.id = "bu"+game.boughtUpgrades[i].id;
+			 boughtEl.appendChild(upEl);
+			 game.shownboughtupgrades++;
+		 }
+	} else if (game.boughtUpgrades.length > game.shownboughtupgrades){
+		for (var i = 0; i < game.boughtUpgrades.length; i++){
+			var el = document.getElementById("bu"+game.boughtUpgrades[i].id);
+			if (!el){
+				var upEl = document.createElement('div');
+				upEl.className = "upgrade on";
+				var name = document.createElement('span');
+				name.innerHTML = game.boughtUpgrades[i].name;
+				name.className = "up-name";
+				upEl.appendChild(name);
+				var hover = document.createElement('div');
+				format = game.formatlarge(game.boughtUpgrades[i].cost);
+				hover.innerHTML = isNaN(format) ? format : Math.ceil(format);
+				hover.innerHTML += " notes <br/>";
+				hover.innerHTML += game.boughtUpgrades[i].description;
+				if (game.boughtUpgrades[i].flavor){
+					hover.innerHTML += "<br/>";
+					var flavor = document.createElement('span');
+					flavor.innerHTML = game.boughtUpgrades[i].flavor;
+					flavor.className = "flavor";
+					hover.appendChild(flavor);
+				}
+				hover.className = "hover";
+				upEl.appendChild(hover);
+				upEl.id = "bu"+game.boughtUpgrades[i].id;
+				boughtEl.insertBefore(upEl, boughtEl.childNodes[i+1]);
+				game.shownboughtupgrades++;
+			}
 		}
-		hover.className = "hover";
-		upEl.appendChild(hover);
-		boughtEl.appendChild(upEl);
 	}
 	
 	//Notification Updates
@@ -887,28 +941,64 @@ Game.prototype.uitick = function(){
 		return a.disp - b.disp;
 	});
 	var achieveEl = document.getElementById('achievements');
-	achieveEl.innerHTML = "";
-	for (var i = 0; i < this.earnedAchievements.length; i++){
-		var achEl = document.createElement('div');
-		achEl.className = "achievement on";
-		var name = document.createElement('span');
-		name.innerHTML = this.earnedAchievements[i].name;
-		achEl.appendChild(name);
-		var hover = document.createElement('div');
-		var descrip = document.createElement('span');
-		descrip.innerHTML = this.earnedAchievements[i].description;
-		hover.appendChild(descrip);
-		if (this.earnedAchievements[i].flavor){
-			hover.innerHTML += "<br/>";
-			var flavor = document.createElement('span');
-			flavor.innerHTML = this.earnedAchievements[i].flavor;
-			flavor.className = "flavor";
-			hover.appendChild(flavor);
+	//If there are less earned achievements, a reset happened, let's refresh everything
+	if (this.earnedAchievements.length < this.shownachievements){
+		achieveEl.innerHTML = "";
+		this.shownachievements = 0;
+		for (var i = 0; i < this.earnedAchievements.length; i++){
+			var achEl = document.createElement('div');
+			achEl.className = "achievement on";
+			var name = document.createElement('span');
+			name.innerHTML = this.earnedAchievements[i].name;
+			achEl.appendChild(name);
+			var hover = document.createElement('div');
+			var descrip = document.createElement('span');
+			descrip.innerHTML = this.earnedAchievements[i].description;
+			hover.appendChild(descrip);
+			if (this.earnedAchievements[i].flavor){
+				hover.innerHTML += "<br/>";
+				var flavor = document.createElement('span');
+				flavor.innerHTML = this.earnedAchievements[i].flavor;
+				flavor.className = "flavor";
+				hover.appendChild(flavor);
+			}
+			hover.className = "hover";
+			achEl.appendChild(hover);
+			achEl.id = "a"+this.earnedAchievements[i].id;
+			achieveEl.appendChild(achEl);
+			this.shownachievements++;
 		}
-		hover.className = "hover";
-		achEl.appendChild(hover);
-		achieveEl.appendChild(achEl);
+	} else if (this.earnedAchievements.length > this.shownachievements){
+		//There are some new achievements, let's display them
+		for (var i = 0; i < this.earnedAchievements.length; i++){
+			var ach = document.getElementById("a"+this.earnedAchievements[i].id);
+			if (!ach){
+				//This achievement does not have a corresponding element, let's create it now
+				var achEl = document.createElement('div');
+				achEl.className = "achievement on";
+				var name = document.createElement('span');
+				name.innerHTML = this.earnedAchievements[i].name;
+				achEl.appendChild(name);
+				var hover = document.createElement('div');
+				var descrip = document.createElement('span');
+				descrip.innerHTML = this.earnedAchievements[i].description;
+				hover.appendChild(descrip);
+				if (this.earnedAchievements[i].flavor){
+					hover.innerHTML += "<br/>";
+					var flavor = document.createElement('span');
+					flavor.innerHTML = this.earnedAchievements[i].flavor;
+					flavor.className = "flavor";
+					hover.appendChild(flavor);
+				}
+				hover.className = "hover";
+				achEl.appendChild(hover);
+				achEl.id = "a"+this.earnedAchievements[i].id;
+				achieveEl.insertBefore(achEl, achieveEl.childNodes[i+1]);
+				this.shownachievements++;
+			}
+		}
 	}
+	
 	document.getElementById("earned-achievements").innerHTML = this.earnedAchievements.length;
 	
 	if (this.hasUpgrade(57)){
